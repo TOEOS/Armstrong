@@ -13,6 +13,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # template
 gem 'slim-rails'
 
+# frontend framework
+gem 'bootstrap-sass', '~> 3.3.5'
+
 group :development do
   gem 'better_errors'
   gem 'quiet_assets'
