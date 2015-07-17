@@ -9,7 +9,8 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
-
+gem 'settingslogic'
+gem 'rest_client'
 # template
 gem 'slim-rails'
 
@@ -22,6 +23,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'pry-byebug'
   gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'zeus'
