@@ -1,8 +1,15 @@
+require 'ostruct'
 class JiebaService
+  PATH = {
+    content_path: "tmp/content.txt",
+    pipe_path: "tmp/jieba_pipe",
+    pid_path: "tmp/jieba.pid"
+  }.freeze
+
   def initialize
-    @content_file = Settings.jieba.content_path
-    @from_pipe = Settings.jieba.pipe_path
-    @pid_file = Settings.jieba.pid_path
+    @content_file = PATH[:content_path]
+    @from_pipe = PATH[:pipe_path]
+    @pid_file = PATH[:pid_path]
   end
 
   def keywords(content)
