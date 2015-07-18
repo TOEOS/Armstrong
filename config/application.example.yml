@@ -1,6 +1,6 @@
 defaults: &defaults
-  ser_api_id: "31845e22f636e6fe37ba17db4195e312"
-  ser_api_secret_key: "e7525005294a4ec974acde6189c3fffc"
+  ser_api_id: xxxxxxxxxxxxxxxxxxxxxxx
+  ser_api_secret_key: xxxxxxxxxxxxxxxxxxxxxxx
   ser_api_path:
     base_path: "http://api.ser.ideas.iii.org.tw/api"
     get_token: "/user/get_token"
@@ -12,8 +12,8 @@ defaults: &defaults
     key_word_search_forum: "/keyword_search/forum"
     key_word_search_news: "/keyword_search/news"
   facebook:
-    key: "820757474711654"
-    secret: "7bd1bbbc7f73ee5fd60bee1afac67471"
+    key: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+    secret: xxxxxxxxxxxxxxxxxxxxxxxxxx
 development:
   <<: *defaults
 
