@@ -26,7 +26,7 @@ class SerApiService
     login
   end
 
-  def top_article_ptt(period: period, limit: nil, board: nil)
+  def top_article_ptt(period:, limit: nil, board: nil)
     # required: period <= 30
     path = PATH[:top_article_ptt]
     response = RestClient.post "#{@ser_uri}#{path}",
@@ -38,7 +38,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def keyword_search_ptt(keyword: keyword,
+  def keyword_search_ptt(keyword:,
                          type: nil,
                          limit: nil,
                          page: nil,
@@ -61,7 +61,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def top_article_facebook(period: period,
+  def top_article_facebook(period:,
                            type: nil,
                            page_id_name: nil,
                            limit: nil,
@@ -79,7 +79,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def keyword_search_facebook(keyword: keyword,
+  def keyword_search_facebook(keyword:,
                               limit: nil,
                               page: nil,
                               strat_date: nil,
@@ -104,7 +104,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def top_article_forum(period: period, limit: nil, forum: nil)
+  def top_article_forum(period:, limit: nil, forum: nil)
     # required: period <= 30
     path = PATH[:top_article_forum]
     response = RestClient.post "#{@ser_uri}#{path}",
@@ -116,7 +116,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def keyword_search_forum(keyword: keyword,
+  def keyword_search_forum(keyword:,
                            type: nil,
                            limit: nil,
                            page: nil,
@@ -139,7 +139,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def keyword_search_news(keyword: keyword,
+  def keyword_search_news(keyword:,
                           type: nil,
                           limit: nil,
                           page: nil,
@@ -162,7 +162,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def key_word_search_id_on_content_party(keyword: keyword,
+  def key_word_search_id_on_content_party(keyword:,
                                           type: nil,
                                           site: nil,
                                           author: nil,
@@ -183,7 +183,7 @@ class SerApiService
     JSON.parse(response)["result"]
   end
 
-  def search_article_by_id_on_content_party(data_id: data_id)
+  def search_article_by_id_on_content_party(data_id:)
     path = PATH[:search_article_by_id_on_content_party]
     response = RestClient.post "#{@conten_party_uri}#{path}",
       data_id: data_id,
@@ -202,5 +202,4 @@ class SerApiService
 
     @token = JSON.parse(response)["result"]["token"]
   end
-
 end
