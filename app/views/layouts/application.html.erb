@@ -8,8 +8,11 @@
 </head>
 <body>
 
-<%= render 'layouts/navigation' %>
-<%= yield %>
+  <div id="wrap">
+    <%= render 'layouts/navigation' %>
+    <%= yield %>
+  </div>
+  <%= render 'layouts/footer' %>
 
 </body>
 </html>
