@@ -3,7 +3,7 @@ class JiebaService
   PATH = {
     content_path: "tmp/content.txt",
     pipe_path: "tmp/jieba_pipe",
-    pid_path: "tmp/jieba.pid"
+    pid_path: "tmp/pids/jieba.pid"
   }.freeze
 
   def initialize
