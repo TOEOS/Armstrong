@@ -1,0 +1,43 @@
+$nav-height: 60px
+
+.Nav
+  display: flex
+  justify-content: center
+  height: $nav-height
+  width: 100%
+  background-color: #FBD6BF
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3)
+  text-align: center
+
+.Nav-Logo
+  margin: 0 
+  display: block
+  height: 100%
+  font-size: 40px
+  color: #A95B2E
+  line-height: $nav-height
+  text-align: center
+
+.Nav-LeftImage
+  display: block
+  width: 60px
+  height: 100%
+  background-color: rgba(37, 89, 138, 0.8)
+
+.Nav-RightImage
+  display: block
+  width: 60px
+  height: 100%
+  background-color: rgba(37, 89, 138, 0.8)
+
+.Nav-Dashed
+  display: block
+  width: 80px
+  height: 100%
+  margin: 0 20px
+  &:before
+    content: ''
+    height: 0
+    border-bottom: 2px dashed #FE9C66
+    display: block
+    margin-top: $nav-height/2
