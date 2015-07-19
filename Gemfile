@@ -23,6 +23,10 @@ gem 'slim-rails'
 # frontend framework
 gem 'bootstrap-sass', '~> 3.3.5'
 
+gem 'sidekiq'
+gem 'whenever', :require => false
+gem 'sinatra', :require => nil
+
 group :development do
   gem 'better_errors'
   gem 'quiet_assets'
