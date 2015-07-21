@@ -166,7 +166,9 @@ class NewArticleCrawler
 
     content = doc.text.split('--').first
 
-    {arthor: arthor, title: title, post_at: post_at, content: content}
+    keywords = JiebaService.new.keywords(content)
+
+    {arthor: arthor, title: title, post_at: post_at, content: content, keywords: keywords}
   end
 
   def comment_params(doc)
