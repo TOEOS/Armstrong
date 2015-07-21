@@ -6,7 +6,8 @@ defaults: &defaults
     key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   apollo:
-    server_location: 'http://localhost:20232/'
+    ws_server: 'http://localhost:20232/'
+    api_server: 'http://localhost:4567/' 
 
 development:
   <<: *defaults

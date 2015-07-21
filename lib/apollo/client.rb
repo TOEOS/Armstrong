@@ -14,7 +14,7 @@ Here is example:
 
 =end
 class Apollo::Client
-  SERVER_LOCATION = Settings.apollo.server_location.freeze
+  SERVER_LOCATION = Settings.apollo.api_server.freeze
 
   attr_reader :channel_id
 
