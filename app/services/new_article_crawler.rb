@@ -17,6 +17,21 @@ class NewArticleCrawler
     end
 
     def spawn(number)
+      new.split(number)
+    end
+  end
+
+  def initialize(links = nil)
+    @links = links || []
+    @configs = {
+      page_number: 9800,
+      find_newest_article_date_page: false,
+      find_newest_article_page: false
+    }
+  end
+
+  def split(number)
+    if !@called
       newest_three_articles = Article.select(:title, :post_at).order(post_at: :desc).limit(3)
 
       last_article_date = newest_three_articles.first.try(:post_date) || Date.today.strftime("%_m/%d")
@@ -25,28 +40,19 @@ class NewArticleCrawler
 
       find_newest_article_date_page(last_article_date)
 
-      links = []
+      find_newest_article_page(newest_three_article_titles, for_spwan: true) if newest_three_articles.any?
 
-      links.push(*(find_newest_article_page(newest_three_article_titles, for_spwan: true))) if newest_three_articles.any?
+      crawl_new_articles(for_spwan: true)
 
-      links.push(*crawl_new_articles(for_spwan: true))
-
-      links.each_slice(links.length / number + 1).to_a.map {|group_of_links| new(group_of_links) }
+      @links.each_slice(links.length / number + 1).map {|group_of_links| new(group_of_links) }
     end
   end
 
-  def initialize(links = nil)
-    @links = links
-    @configs = {
-      page_number: 9800,
-      find_newest_article_date_page: false,
-      find_newest_article_page: false
-    }
-  end
-
   def call
-    if @links
+    if @links != []
       @links.each {|link| crawl_artcile(link)}
+
+      @called = true
     else
       newest_three_articles = Article.select(:title, :post_at).order(post_at: :desc).limit(3)
 
@@ -59,11 +65,13 @@ class NewArticleCrawler
       find_newest_article_page(newest_three_article_titles) if newest_three_articles.any?
 
       crawl_new_articles
+
+      @called = true
     end
   end
 
   def find_newest_article_date_page(last_article_date)
-    while @configs[:find_newest_article_date_page]
+    while !@configs[:find_newest_article_date_page]
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       doc = Nokogiri::HTML(open(ptt_url, 'Cookie'=> 'over18=1'))
@@ -71,13 +79,13 @@ class NewArticleCrawler
       article_days = doc.css('.r-ent').css('.meta').css('.date').map(&:text).uniq
 
       article_days.include?(last_article_date) ?
-        @configs[:find_article_date_page] = true :
+        @configs[:find_newest_article_date_page] = true :
         @configs[:page_number] += 1
     end
   end
 
   def find_newest_article_page(newest_three_article_titles, for_spwan: false)
-    while @configs[:find_newest_article_page]
+    while !@configs[:find_newest_article_page]
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -96,30 +104,31 @@ class NewArticleCrawler
                                select {|a_tag| a_tag.text.match(/新聞|爆[卦掛]/)}.
                                map {|a_tag| a_tag[:href]}
 
-        return new_articles_links if for_spwan
+        if for_spwan
+          return @links.push(*new_articles_links)
+        end
 
         new_articles_links.each do |link|
           crawl_artcile(link)
         end
 
         @configs[:find_newest_article_page] = true
-        @page_number += 1
+        @configs[:page_number] += 1
       else
-        @page_number += 1
+        @configs[:page_number] += 1
       end
     end
   end
 
   def crawl_new_articles(for_spwan: false)
-    links = []
     while true
-      ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"  
+      ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
         doc = Nokogiri::HTML(open(ptt_url, 'Cookie'=> 'over18=1'))
       rescue
         @configs[:page_number] -= 1
-        return links if for_spwan
+        return @links if for_spwan
         break
       end
 
@@ -128,7 +137,7 @@ class NewArticleCrawler
                                map {|a_tag| a_tag[:href]}
 
       if for_spwan
-        links.push(*new_articles_links)
+        @links.push(*new_articles_links)
       else
         new_articles_links.each do |link|
           crawl_artcile(link)
@@ -149,7 +158,7 @@ class NewArticleCrawler
 
       comments = doc.css('.push')
 
-      comments.each {|c| Comment.create(article_id: article_id, **comment_params) }
+      comments.each {|c| Comment.create(article_id: article_id, **comment_params(doc)) }
     end
   end
 
