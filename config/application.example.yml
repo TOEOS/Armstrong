@@ -5,9 +5,13 @@ defaults: &defaults
   facebook:
     key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    
+  apollo:
+    server_location: 'http://localhost:20232/'
+
 development:
   <<: *defaults
+  apollo:
+    server_location: 'http://localhost:20232/'
 
 test:
   <<: *defaults
