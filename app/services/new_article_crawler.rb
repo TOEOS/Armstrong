@@ -1,3 +1,15 @@
+# How to Use
+# 1. crawl all new articles
+#   NewArticleCrawler.call
+#   or
+#   NewArticleCrawler.new.call
+# 2. crawl all new articles in n batch
+#   new_article_crawlers = NewArticleCrawler.spawn(4)
+#   #=> [#<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>]
+#   new_article_crawlers.each(&:call)
+#   #=> crawlers will crawl each by each
+#
+
 class NewArticleCrawler
   class << self
     def call
@@ -15,7 +27,7 @@ class NewArticleCrawler
 
       links = []
 
-      links.push(*(find_newest_article_page(newest_three_article_titles, for_spwan: true)) if newest_three_articles.any?
+      links.push(*(find_newest_article_page(newest_three_article_titles, for_spwan: true))) if newest_three_articles.any?
 
       links.push(*crawl_new_articles(for_spwan: true))
 
