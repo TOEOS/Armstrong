@@ -2,7 +2,7 @@ import signal, os, time, sys
 import jieba
 import jieba.analyse
 
-PID_PATH = "tmp/jieba.pid"
+PID_PATH = "tmp/pids/jieba.pid"
 
 class JiebaBridge(object):
     CONTENT_PATH = "tmp/content.txt"
