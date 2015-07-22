@@ -22,6 +22,7 @@ gem 'slim-rails'
 
 # frontend framework
 gem 'bootstrap-sass', '~> 3.3.5'
+gem 'react-rails', '~> 1.0'
 
 group :development do
   gem 'better_errors'
