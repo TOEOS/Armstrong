@@ -1,13 +1,20 @@
 # How to Use
+# 
 # 1. crawl all new articles
-#   NewArticleCrawler.call
-#   or
-#   NewArticleCrawler.new.call
+# 
+#      NewArticleCrawler.call
+# 
+#      or
+# 
+#      NewArticleCrawler.new.call
+# 
 # 2. crawl all new articles in n batch
-#   new_article_crawlers = NewArticleCrawler.spawn(4)
-#   #=> [#<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>]
-#   new_article_crawlers.each(&:call)
-#   #=> crawlers will crawl each by each
+# 
+#      new_article_crawlers = NewArticleCrawler.spawn(4)
+#      #=> [#<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>]
+# 
+#      new_article_crawlers.each(&:call)
+#      #=> crawlers will crawl each by each
 #
 
 class NewArticleCrawler
