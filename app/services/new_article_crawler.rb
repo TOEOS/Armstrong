@@ -155,7 +155,7 @@ class NewArticleCrawler
   def crawl_artcile(link, crawl_comments: true)
     doc = Nokogiri::HTML(open('https://www.ptt.cc/'+link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
 
-    article = Article.create(article_params(doc))
+    article = Article.create(article_params(doc), link)
 
     if crawl_comments
       article_id = article.id
@@ -168,7 +168,7 @@ class NewArticleCrawler
 
   private
 
-  def article_params(doc)
+  def article_params(doc, link)
     arthor = doc.css('.article-metaline')[0].css('.article-meta-value').text
 
     title = doc.css('.article-metaline')[1].css('.article-meta-value').text
@@ -181,7 +181,7 @@ class NewArticleCrawler
 
     keywords = JiebaService.new.keywords(content)
 
-    {arthor: arthor, title: title, post_at: post_at, content: content, keywords: keywords}
+    {arthor: arthor, title: title, post_at: post_at, content: content, keywords: keywords, link: link}
   end
 
   def comment_params(doc)
