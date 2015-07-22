@@ -1,3 +1,22 @@
+# How to Use
+# 
+# 1. update all event comments
+# 
+#      EventCommentsCrawler.call
+# 
+#      or
+# 
+#      EventCommentsCrawler.new.call
+# 
+# 2. update all event comments in N batch
+#   
+#      event_comments_crawlers = EventCommentsCrawler.spawn(4)
+#      #=> [#<EventCommentsCrawler>, #<EventCommentsCrawler>, #<EventCommentsCrawler>, #<EventCommentsCrawler>]
+# 
+#      event_comments_crawlers.each(&:call)
+#      #=> crawlers will start update event comments each by each
+#
+
 class EventCommentsCrawler
   class << self
     def call
