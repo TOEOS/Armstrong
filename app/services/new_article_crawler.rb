@@ -192,6 +192,6 @@ class NewArticleCrawler
   end
 
   def comment_params(doc)
-    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text}
+    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1]}
   end
 end
