@@ -44,7 +44,7 @@ class NewArticleCrawler
 
       crawl_new_articles(for_spwan: true)
 
-      @links.each_slice(links.length / number + 1).map {|group_of_links| new(group_of_links) }
+      @links.each_slice(@links.length / number + 1).map {|group_of_links| self.class.new(group_of_links) }
     end
   end
 
@@ -74,7 +74,11 @@ class NewArticleCrawler
     while !@configs[:find_newest_article_date_page]
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
-      doc = Nokogiri::HTML(open(ptt_url, 'Cookie'=> 'over18=1'))
+      begin
+        doc = Nokogiri::HTML(open(ptt_url, 'Cookie'=> 'over18=1'))
+      rescue
+        next
+      end
 
       article_days = doc.css('.r-ent').css('.meta').css('.date').map(&:text).uniq
 
