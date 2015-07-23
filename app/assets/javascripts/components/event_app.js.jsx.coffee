@@ -1,5 +1,11 @@
 @EventApp = React.createClass
   render: ->
     `<div>
-      <h1>123</h1>
+      <div className='event-left-wrapper'>
+        <EventInfo />
+        <EventArticle />
+      </div>
+      <div className='event-right-wrapper'>
+        <Chatroom />
+      </div>
     </div>`
