@@ -5,3 +5,11 @@ set :output, "./log/cron_log.log"
 every 2.minutes do
   rake 'jobs:post_detect'
 end
+
+every 2.minutes do
+  rake 'jobs:event_check'
+end
+
+every 2.minutes do
+  rake 'jobs:push_check'
+end

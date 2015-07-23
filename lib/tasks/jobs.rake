@@ -5,6 +5,14 @@ namespace :jobs do
   task :post_detect  => :environment do
     run_limited_job('PostDetectJob')
   end
+  desc "Start event checking"
+  task :event_check  => :environment do
+    run_limited_job('EventCheckJob')
+  end
+  desc "Start push checking"
+  task :push_check  => :environment do
+    run_limited_job('PushCheckJob')
+  end
 end
 
 def run_limited_job(klass)
