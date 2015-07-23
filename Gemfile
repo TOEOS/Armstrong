@@ -10,7 +10,9 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'settingslogic'
-gem 'rest_client'
+gem 'rest-client'
+gem 'devise'
+gem 'omniauth-facebook'
 # template
 gem 'slim-rails'
 
