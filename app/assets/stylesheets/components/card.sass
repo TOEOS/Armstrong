@@ -1,0 +1,104 @@
+$card-lg-top-margin: 24px
+$card-margin: 12px
+$card-cover-height: 240px
+$card-cover-width: 360px
+.FiredArea
+  display: block
+  width: 100%
+  margin-top: 30px
+  text-align: center
+
+.Card
+  display: block
+  min-height: 240px
+  background-color: #FEFEFE
+  margin-bottom: 30px
+  overflow: hidden
+  &:hover
+    box-shadow: 0 0 4px #4D4D4D
+
+.Card--fired
+
+.Card-Meta
+  display: flex
+  justify-content: space-around
+  height: 40px
+
+.Card-Meta--up
+  background-color: $c-red
+.Card-Meta--down
+  background-color: $c-green
+
+.Card-Meta-Hot,
+.Card-Meta-Trend
+  display: inline-block
+  height: 100%
+  width: 40px
+  line-height: 40px
+  font-size: 18px
+  color: $c-white
+
+.Card-Meta-Hot
+.Card-Meta-Trend
+
+.Card-Cover
+  display: block
+  height: 240px
+  background-image: url(http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg)
+  background-size: cover
+  background-position: 50%
+
+.Card-Comment
+  display: -webkit-box
+  display: block
+  height: 48px
+  font-size: 16px
+  line-height: 24px
+  margin: $card-margin
+  text-align: center
+  overflow: hidden
+  text-overflow: ellipsis
+  -webkit-line-clamp: 2
+  -webkit-box-orient: vertical
+
+////////////
+// RWD
+////
+@media screen and (min-width: 750px)
+  .Card--fired
+    position: relative
+    display: inline-block
+    padding-left: 360px
+    height: 240px
+    width: 650px
+    .Card-Cover
+      position: absolute
+      top: 0
+      left: 0
+      width: 360px
+      height: 100%
+      margin: 0
+    .Card-SubWrapper
+      position: relative
+      display: block
+      height: 100%
+      padding-bottom: 80px
+      overflow: hidden
+    .Card-Meta
+      position: absolute
+      display: block
+      right: 0
+      bottom: 0
+      height: 80px
+      width: 100%
+    .Card-Meta-Hot,
+    .Card-Meta-Trend
+      display: block
+      height: 40px
+      width: 100%
+      text-align: center
+    .Card-Comment
+      font-size: 20px
+      line-height: 1.8
+      height: 160px
+      -webkit-line-clamp: 4

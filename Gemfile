@@ -9,10 +9,18 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+
+# basic
 gem 'settingslogic'
-gem 'rest-client'
+
+# social login
 gem 'devise'
 gem 'omniauth-facebook'
+
+# http client
+gem 'rest_client'
+gem 'faraday'
+
 # template
 gem 'slim-rails'
 
