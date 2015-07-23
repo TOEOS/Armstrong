@@ -1,17 +1,17 @@
 require 'sidekiq/api'
 
 namespace :jobs do
-  desc "Start post dectection"
-  task :post_detect  => :environment do
-    run_limited_job('PostDetectJob')
+  desc "Start article dectection"
+  task :article_detect  => :environment do
+    run_limited_job('ArticleDetectJob')
   end
   desc "Start event checking"
   task :event_check  => :environment do
     run_limited_job('EventCheckJob')
   end
-  desc "Start push checking"
-  task :push_check  => :environment do
-    run_limited_job('PushCheckJob')
+  desc "Start comment checking"
+  task :comment_check  => :environment do
+    run_limited_job('CommentCheckJob')
   end
 end
 

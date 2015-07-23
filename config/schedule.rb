@@ -3,7 +3,7 @@ set :output, "./log/cron_log.log"
 #job_type :job, "cd :path && :environment_variable=:environment bundle exec scripts/sidekiq_pusher.rb :task :output"
 
 every 2.minutes do
-  rake 'jobs:post_detect'
+  rake 'jobs:article_detect'
 end
 
 every 2.minutes do
@@ -11,5 +11,5 @@ every 2.minutes do
 end
 
 every 2.minutes do
-  rake 'jobs:push_check'
+  rake 'jobs:comment_check'
 end
