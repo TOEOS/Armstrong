@@ -8,7 +8,7 @@ class Event
     @articles = @mockArticlesData().articles
     @currentArticleIndex = @articles.length - 1
     new Timeline(@articles)
-
+    new Chatroom
     # $.ajax(
     #   url: '/api/events/1/articles.json'
     #   method: 'get'
@@ -19,9 +19,20 @@ class Event
     # ).fail( ->
     # )
 
-  appendArtile: ->
+  initWebsocket: ->
+    event_id = $('#event-data').attr('data-id')
+    ws = new WebSocket("ws://127.0.0.1:20232?channel=" + event_id)
 
-  initArticleWebsocket: ->
+    ws.onerror = (error) ->
+
+    ws.onclose = ->
+
+    ws.onopen = ->
+
+    ws.onmessage = (e) ->
+      data = e.data
+      console.debug e
+      console.debug data
 
   mockArticlesData: ->
     {
@@ -112,11 +123,14 @@ class Timeline
 
   showArticleByIndex: (index) ->
     itemData = @items[index]
-
-    $('.Article-Content').html(itemData.article_content)
+    @renderArticleContent(itemData)
     @focusTimelinArticle(index)
     @currentArticleIndex = index
     @refreshArrow()
+
+  renderArticleContent: (article) ->
+    $('.Article-Content').html(article.article_content)
+
 
   focusTimelinArticle: (index)->
     @timeline.focus(index + 1)
@@ -145,5 +159,15 @@ class Timeline
     @showArticleByIndex(@currentArticleIndex + 1)
   prevArticle: ->
     @showArticleByIndex(@currentArticleIndex - 1)
+
+class Chatroom
+  constructor: ->
+
+  pushComment: ->
+
+  pushMessage: ->
+
+
+
 
 new Event()

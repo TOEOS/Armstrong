@@ -1,3 +1,5 @@
+#event-data style="display:none;" data-id=1
+
 .event-left-wrapper
   .EventInfo
     .EventInfo-Meta.EventInfo-Meta--up
@@ -17,5 +19,42 @@
         iframe src="http://localhost:3000/events" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"
 
 .event-right-wrapper
+  .Chatroom
+    .Chatroom-List
+      .Chatroom-MoreMessage
+        |下方還有更多訊息喔
+      .Chatroom-Article
+        .Chatroom-Article-Title
+          |文章標題文章標題文章標題文章標題文章標題文章標題文章標題文章標題
+        .Chatroom-Article-Comment.media
+          .media-left
+            =image_tag("message_icon_20x18")
+          .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
+        .Chatroom-Article-Comment.media
+          .media-left
+            =image_tag("message_icon_20x18")
+          .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
+        .Chatroom-Article-Comment.media
+          .media-left
+            =image_tag("message_icon_20x18")
+          .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
+        a.Chatroom-Article-Link
+          |< 回原文看更多連結
+
+      .Chatroom-Message.media
+        .Chatroom-Message-UserPhoto.media-left
+          =image_tag("ptt_icon_100x100_03")
+        .media-body
+          .Chatroom-Message-Username.media-heading
+            |Username
+          .Chatroom-Message-Content
+            |說一些奇怪的話，說一些奇怪的話，說一些奇怪的話
+
+    .media.Chatroom-InputArea
+      .media-left.Chatroom-InputArea-UserPhoto
+        =image_tag("ptt_icon_100x100_03")
+
+      .media-body.Chatroom-InputArea-Input
+        =text_field_tag 'message', nil, placeholder: '和別人一起聊一下你的想法吧...'
 
 

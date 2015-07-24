@@ -1,0 +1,76 @@
+$chatroom-width: 300px
+
+.Chatroom
+  display: block
+  height: 100%
+  width: 100%
+  padding-bottom: 80px
+  background-color: $c-white
+
+.Chatroom-List
+  position: relative
+  height: 100%
+  overflow-y: scroll
+
+.Chatroom-MoreMessage
+  position: fixed
+  bottom: 80px
+  display: block
+  width: $chatroom-width
+  height: 30px
+  background-color: $c-primary
+  color: $c-orange
+  text-align: center
+  line-height: 30px
+  font-size: $t-size-s
+
+// -------------------------------------
+//   Article
+// -------------------------------------
+.Chatroom-Article
+  background-color: $c-primary
+  padding: 10px
+
+.Chatroom-Article-Title
+  font-size: $t-size-s
+  color: $c-primary-text
+
+.Chatroom-Article-Link,
+a.Chatroom-Article-Link
+  display: block
+  margin-top: 10px
+  text-align: center
+  color: darken($c-orange, 10%)
+  text-decoration: none
+  cursor: pointer
+  &:hover
+    text-decoration: none
+
+// -------------------------------------
+//   Message
+// -------------------------------------
+.Chatroom-Message
+  padding-left: 10px
+  padding-right: 10px
+
+.Chatroom-Message-UserPhoto
+  img
+    width: 40px
+
+// -------------------------------------
+//   Input Area
+// -------------------------------------
+.Chatroom-InputArea
+  position: absolute
+  bottom: 0
+  height: 80px
+  padding: 10px
+.Chatroom-InputArea-UserPhoto
+  img
+    width: 40px
+
+.Chatroom-InputArea-Input
+  input,
+  textarea
+    width: 100%
+    height: 100%
