@@ -6,8 +6,8 @@ class Event
   loadArticles: ->
     @articles = @mockArticlesData().articles
     @currentArticleIndex = @articles.length - 1
-    @timeline = new Timeline(@articles)
-    @chatroom = new Chatroom
+    @timeline = new Timeline(@articles, this)
+    @chatroom = new Chatroom(this)
     @initWebsocket()
     # $.ajax(
     #   url: '/api/events/1/articles.json'
@@ -73,10 +73,11 @@ class Event
     }
 
 class Timeline
-  constructor: (items) ->
+  constructor: (items, event_controller) ->
     @$leftArrow = $('#left-arrow')
     @$rightArrow = $('#right-arrow')
 
+    @event_controller = event_controller
     @items = items
     container = document.getElementById('timeline');
 
@@ -99,7 +100,7 @@ class Timeline
       zoomMax: 31536000000,
       zoomMin: 600000,
       template: (item) ->
-        "<div data-id='#{item.id}'>
+        "<div class='js-item-info' data-id='#{item.id}'>
           <img style='width: 30px; height: 30px;'
             src='http://cdn8.staztic.com/app/a/6091/6091834/ptt-beta-2-l-124x124.png' alt=''>
           #{item.title}
@@ -114,7 +115,7 @@ class Timeline
   initEvent: ->
     @timeline.on 'select', (props) =>
       $item = $(props.event.target)
-      item_id = $item.attr('data-id')
+      item_id = $item.attr('data-id') || $item.find('.js-item-info').attr('data-id')
       @showArticle(item_id)
 
     @$leftArrow.on 'click', =>
@@ -168,8 +169,19 @@ class Timeline
     @showArticleByIndex(@currentArticleIndex - 1)
 
 class Chatroom
-  constructor: ->
+  constructor: (event_controller) ->
     @$chatroomList = $('#chatroom-list')
+    @event_controller = event_controller
+
+    @initEvent()
+
+  initEvent: ->
+    that = this
+    @$chatroomList.on('click', '.js-article-link', ->
+      that.event_controller
+        .timeline
+        .showArticle($(this).attr('data-id'))
+    )
 
   pushArticleComment: (data)->
     @$chatroomList.append(@articleCommentTemplate(data.article))
@@ -216,7 +228,7 @@ class Chatroom
             total + @commentTemplate(comment)
           , "")
         }
-        <a class="Chatroom-Article-Link" data-id="#{article.id}">回原文看更多連結</a>
+        <a class="Chatroom-Article-Link js-article-link" data-id="#{article.id}">回原文看更多連結</a>
       </div>
     """
 
