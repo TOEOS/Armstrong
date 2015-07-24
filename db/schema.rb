@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722135435) do
+ActiveRecord::Schema.define(version: 20150723134153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,16 +25,22 @@ ActiveRecord::Schema.define(version: 20150722135435) do
     t.integer  "comments_count"
     t.text     "keywords"
     t.text     "link"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "comments", force: :cascade do |t|
-    t.integer "article_id"
-    t.string  "commenter"
-    t.string  "comment"
+    t.integer  "article_id"
+    t.string   "commenter"
+    t.string   "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "events", force: :cascade do |t|
-    t.text "keywords"
+    t.text     "keywords"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
