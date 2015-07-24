@@ -1,3 +1,5 @@
+$.fn.scrollBottom = ->
+  return $(document).height() - this.scrollTop() - this.height()
 
 class Event
   constructor: ->
@@ -171,6 +173,7 @@ class Timeline
 class Chatroom
   constructor: (event_controller) ->
     @$chatroomList = $('#chatroom-list')
+    @$moreMessage = $('#more-message')
     @event_controller = event_controller
 
     @initEvent()
@@ -183,6 +186,18 @@ class Chatroom
         .showArticle($(this).attr('data-id'))
     )
 
+    @$chatroomList.scroll (e) ->
+      if ($(this)[0].scrollHeight - $(this).height() - $(this).scrollTop()) > 100
+        that.$moreMessage.show()
+      else
+        that.$moreMessage.hide()
+
+    @$moreMessage.click ->
+      that.$chatroomList.animate(
+        { scrollTop: that.$chatroomList[0].scrollHeight - that.$chatroomList.height() },
+        1000
+      )
+
   pushArticleComment: (data)->
     @$chatroomList.append(@articleCommentTemplate(data.article))
 
@@ -191,7 +206,7 @@ class Chatroom
 
   messageTemplate: (message) ->
     """
-    <div class="Chatroom-Message media">
+    <div class="Chatroom-Message media js-push-elem">
       <div class="Chatroom-Message-UserPhoto media-left">
         <img src="#{message.photo}">
       </div>
@@ -219,7 +234,7 @@ class Chatroom
 
   articleCommentTemplate: (article) ->
     """
-      <div class="Chatroom-Article">
+      <div class="Chatroom-Article js-push-elem">
         <div class="Chatroom-Article-Title">
           #{article.title}
         </div>
