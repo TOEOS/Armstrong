@@ -1,5 +1,20 @@
-@Timeline = React.createClass
-  componentDidMount: ->
+
+class Event
+  constructor: ->
+    @articles = []
+
+  loadArticles: ->
+    $.ajax(
+      url: '/events/1/articles'
+      method: 'get'
+    ).done((data) ->
+
+    ).fail( ->
+    )
+  appendArtile: ->
+
+class Timeline
+  constructor: ->
     container = document.getElementById('timeline');
 
     # Create a DataSet (allows two way data-binding)
@@ -15,15 +30,14 @@
     # Configuration for the Timeline
     options = {
       width: '100%',
-      height: '200px',
+      height: '160px',
       margin: {
         item: 20
       },
-      zoomMAx: 31536000000
+      zoomMax: 31536000000
     }
 
     # Create a Timeline
     timeline = new vis.Timeline(container, items, options)
 
-  render: ->
-    `<div key='event-timeline' id='timeline'></div>`
+new Timeline()

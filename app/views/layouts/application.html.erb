@@ -3,10 +3,9 @@
 <head>
   <title>Armstrong</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body class='<%= body_class %>'>
 
   <div id="wrap">
     <%= render 'layouts/navigation' %>
@@ -15,5 +14,6 @@
   </div>
   <%= render 'layouts/footer' %>
 
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 </body>
 </html>

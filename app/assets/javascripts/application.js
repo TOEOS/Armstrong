@@ -14,9 +14,11 @@
 //= require jquery_ujs
 //= require turbolinks
 
+//= require vis
 //= require lodash
-//= require reflux
-//= require react
-//= require react_ujs
-//= require components
+// require reflux
+// require react
+// require react_ujs
+// require components
+//= require_tree ./pages
 //= require bootstrap-sprockets

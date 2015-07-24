@@ -17,8 +17,9 @@ gem 'settingslogic'
 gem 'rest_client'
 gem 'faraday'
 
-# template
+# view
 gem 'slim-rails'
+gem "flutie"
 
 # frontend framework
 gem 'bootstrap-sass', '~> 3.3.5'
