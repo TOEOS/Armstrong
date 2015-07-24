@@ -3,12 +3,12 @@ class Event
   constructor: ->
     @articles = []
     @loadArticles()
-
   loadArticles: ->
     @articles = @mockArticlesData().articles
     @currentArticleIndex = @articles.length - 1
-    new Timeline(@articles)
-    new Chatroom
+    @timeline = new Timeline(@articles)
+    @chatroom = new Chatroom
+    @initWebsocket()
     # $.ajax(
     #   url: '/api/events/1/articles.json'
     #   method: 'get'
@@ -20,6 +20,7 @@ class Event
     # )
 
   initWebsocket: ->
+    that = this
     event_id = $('#event-data').attr('data-id')
     ws = new WebSocket("ws://127.0.0.1:20232?channel=" + event_id)
 
@@ -29,10 +30,15 @@ class Event
 
     ws.onopen = ->
 
-    ws.onmessage = (e) ->
-      data = e.data
-      console.debug e
-      console.debug data
+    ws.onmessage = (data) ->
+      data = JSON.parse(data.data)
+
+      if data.data_type == 'message'
+        that.chatroom.pushMessage(data.data)
+      else if data.data_type == 'article_comment'
+        that.chatroom.pushArticleComment(data.data)
+      else if data.data_type == 'article'
+        that.timeline.pushItem(data.data)
 
   mockArticlesData: ->
     {
@@ -131,6 +137,7 @@ class Timeline
   renderArticleContent: (article) ->
     $('.Article-Content').html(article.article_content)
 
+  pushItem: (data) ->
 
   focusTimelinArticle: (index)->
     @timeline.focus(index + 1)
@@ -162,11 +169,56 @@ class Timeline
 
 class Chatroom
   constructor: ->
+    @$chatroomList = $('#chatroom-list')
 
-  pushComment: ->
+  pushArticleComment: (data)->
+    @$chatroomList.append(@articleCommentTemplate(data.article))
 
-  pushMessage: ->
+  pushMessage: (data) ->
+    @$chatroomList.append(@messageTemplate(data.message))
 
+  messageTemplate: (message) ->
+    """
+    <div class="Chatroom-Message media">
+      <div class="Chatroom-Message-UserPhoto media-left">
+        <img src="#{message.photo}">
+      </div>
+      <div class="media-body">
+        <div class="Chatroom-Message-Username media-heading">
+          #{message.author}
+        </div>
+        <div class="Chatroom-Message-Content">
+          #{message.content}
+        </div>
+      </div>
+    </div>
+    """
+  commentTemplate: (comment) ->
+    """
+    <div class="Chatroom-Article-Comment media">
+      <div class="media-left">
+        <img src="/message_icon_20x18.png" alt="Message icon">
+      </div>
+      <div class="media-body">
+        #{comment.comment}
+      </div>
+    </div>
+    """
+
+  articleCommentTemplate: (article) ->
+    """
+      <div class="Chatroom-Article">
+        <div class="Chatroom-Article-Title">
+          #{article.title}
+        </div>
+        #{
+          _.reduce(article.comments, (total, comment) =>
+            total + @commentTemplate(comment)
+          , "")
+        }
+        <a class="Chatroom-Article-Link" data-id="#{article.id}">回原文看更多連結</a>
+      </div>
+    """
 
 
 
