@@ -1,18 +1,18 @@
 .event-left-wrapper
   .EventInfo
     .EventInfo-Meta.EventInfo-Meta--up
-      EventInfo-Meta-Hot 熱度值 90/100
-      EventInfo-Meta-Trend 上 50%
+      .EventInfo-Meta-Hot 熱度值 90/100
+      .EventInfo-Meta-Trend 上 50%
     .EventInfo-Title 事件字串事件字串事件字串事件字串事件字串事件字串
   .Article.Article--in_event
     .Timeline#timeline
     .Article-Wrapper
-      .Arrow.Arrow--in_event_right
+      #right-arrow.Arrow.Arrow--in_event_right
         .Arrow-Image >
-        .Arrow-Content 前一篇
-      .Arrow.Arrow--in_event_left
-        .Arrow-Image <
         .Arrow-Content 下一篇
+      #left-arrow.Arrow.Arrow--in_event_left
+        .Arrow-Image <
+        .Arrow-Content 上一篇
       .Article-Content
         iframe src="http://localhost:3000/events" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"
 
