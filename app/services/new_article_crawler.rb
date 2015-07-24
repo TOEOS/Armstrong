@@ -162,7 +162,16 @@ class NewArticleCrawler
 
   def crawl_artcile(link, crawl_comments: true)
     # puts "article: #{link}"
-    doc = Nokogiri::HTML(open('https://www.ptt.cc/'+link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
+    get_article = false
+
+    while !get_article
+      begin
+        doc = Nokogiri::HTML(open('https://www.ptt.cc/'+link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
+        get_article = true if doc
+      rescue
+        next
+      end
+    end
 
     if doc.css('.article-metaline').length == 3
       article = Article.create(article_params(doc, 'https://www.ptt.cc/'+link))
@@ -172,7 +181,7 @@ class NewArticleCrawler
 
         comments = doc.css('.push')
 
-        comments.each {|c| Comment.create(article_id: article_id, **comment_params(doc)) }
+        comments.each {|c| Comment.create(article_id: article_id, **comment_params(c)) }
       end
     end
   end
