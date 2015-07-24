@@ -1,18 +1,18 @@
 # How to Use
-# 
+#
 # 1. crawl all new articles
-# 
+#
 #      NewArticleCrawler.call
-# 
+#
 #      or
-# 
+#
 #      NewArticleCrawler.new.call
-# 
+#
 # 2. crawl all new articles in n batch
-# 
+#
 #      new_article_crawlers = NewArticleCrawler.spawn(4)
 #      #=> [#<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>, #<NewArticleCrawler>]
-# 
+#
 #      new_article_crawlers.each(&:call)
 #      #=> crawlers will crawl each by each
 #
@@ -42,7 +42,7 @@ class NewArticleCrawler
       newest_three_articles = Article.select(:title, :post_at).order(post_at: :desc).limit(3)
 
       last_article_date = newest_three_articles.first.try(:post_date) || Date.today.strftime("%_m/%d")
-      
+
       newest_three_article_titles = newest_three_articles.map(&:title)
 
       find_newest_article_date_page(last_article_date)
@@ -64,7 +64,7 @@ class NewArticleCrawler
       newest_three_articles = Article.select(:title, :post_at).order(post_at: :desc).limit(3)
 
       last_article_date = newest_three_articles.first.try(:post_date) || Date.today.strftime("%_m/%d")
-      
+
       newest_three_article_titles = newest_three_articles.map(&:title)
 
       find_newest_article_date_page(last_article_date)
@@ -79,6 +79,7 @@ class NewArticleCrawler
 
   def find_newest_article_date_page(last_article_date)
     while !@configs[:find_newest_article_date_page]
+      # print "page: #{@configs[:page_number]}\r"
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -160,10 +161,11 @@ class NewArticleCrawler
   end
 
   def crawl_artcile(link, crawl_comments: true)
+    # puts "article: #{link}"
     doc = Nokogiri::HTML(open('https://www.ptt.cc/'+link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
 
     if doc.css('.article-metaline').length == 3
-      article = Article.create(article_params(doc, 'https://www.ptt.cc/'+link)) 
+      article = Article.create(article_params(doc, 'https://www.ptt.cc/'+link))
 
       if crawl_comments
         article_id = article.id
