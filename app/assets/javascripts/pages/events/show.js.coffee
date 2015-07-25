@@ -33,7 +33,7 @@ class Event
   initWebsocket: ->
     that = this
     event_id = $('#event-data').attr('data-id')
-    ws = new WebSocket("ws://127.0.0.1:20232?channel=" + event_id)
+    ws = new WebSocket("ws://52.25.179.156:20232?channel=" + event_id)
 
     ws.onerror = (error) ->
 
