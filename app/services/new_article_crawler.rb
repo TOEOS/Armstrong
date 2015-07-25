@@ -18,8 +18,7 @@
 #
 
 class NewArticleCrawler
-  DEBUGGING_MODE = true
-  LOG_DEBUG_MSG = Rails.env == 'development' && DEBUGGING_MODE
+  LOG_DEBUG_MSG = true
 
   class << self
     def call
@@ -88,10 +87,10 @@ class NewArticleCrawler
     end
 
     if LOG_DEBUG_MSG
-      puts "start crawler at: #{debugging_start_time}", 
-           "find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}", 
-           "find_newest_article_page at: #{debugging_find_newest_article_page}", 
-           "end crawler at: #{Time.now}"
+      puts "start crawler at: #{debugging_start_time}"
+      puts "find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}" if @links == []
+      puts "find_newest_article_page at: #{debugging_find_newest_article_page}" if @links == []
+      puts "end crawler at: #{Time.now}"
     end
   end
 
