@@ -32,7 +32,7 @@ class NewArticleCrawler
     end
 
     def spawn_json(number)
-      new.split(number).map {|crawler| new(crawler.links.to_json) }
+      new.split(number).map {|crawler| crawler.links.to_json }
     end
   end
 
