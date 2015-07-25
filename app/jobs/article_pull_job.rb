@@ -3,7 +3,7 @@ class ArticlePullJob < ActiveJob::Base
 
   def perform(json)
     puts "ArticlePullJob: enter: #{Time.now}"
-    crawler = NewArticleCrawler.new(JSON.parse(json))
+    crawler = NewArticleCrawler.new(links: JSON.parse(json))
     crawler.call
     puts "ArticlePullJob: leave: #{Time.now}"
   end
