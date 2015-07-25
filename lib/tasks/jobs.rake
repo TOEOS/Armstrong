@@ -11,7 +11,7 @@ namespace :jobs do
   end
   desc "Start comment checking"
   task :comment_check  => :environment do
-    run_limited_job('CommentCheckJob')
+    run_limited_job('CommentCheckJob', 'CommentUpdateJob')
   end
 end
 

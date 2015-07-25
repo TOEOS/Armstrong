@@ -74,9 +74,15 @@ class EventCommentsCrawler
 
         article_id = a['id']
 
+        new_comments = []
+
         new_pushes[last_comment_index..-1].each do |p|
-          Comment.create(article_id: article_id, **comment_params(p))
+          new_comments << Comment.create(article_id: article_id, **comment_params(p))
         end
+
+        client = Apollo.create(a.event_id)
+        a.comments = new_comments
+        client.push(a, 'article_comment')
       end
 
       @called = true
@@ -86,6 +92,12 @@ class EventCommentsCrawler
   private
 
   def comment_params(doc)
-    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1]}
+    if doc.css('.push-ipdatetime').text.match(/^\d{2}\/\d{2} \d{2}:\d{2}/)
+      commented_at = Time.parse(doc.css('.push-ipdatetime').text[0..10])
+    else
+      commented_at = nil
+    end
+
+    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1], commented_at: commented_at}
   end
 end
