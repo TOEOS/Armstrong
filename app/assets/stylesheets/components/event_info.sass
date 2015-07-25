@@ -5,27 +5,50 @@
 
 .EventInfo-Meta
   display: flex
-  justify-content: space-around
-  height: 40px
+  justify-content: space-between
+  height: 60px
 
 .EventInfo-Meta--up
   background-color: $c-red
+  .EventInfo-Meta-Trend
+    &:before
+      content: "\25B2"
+      color: $c-white
+
 .EventInfo-Meta--down
   background-color: $c-green
+  .EventInfo-Meta-Trend
+    &:before
+      content: "\25BC"
+      color: $c-white
 
 .EventInfo-Meta-Hot,
-.EventInfo-Meta-Trend
-  display: inline-block
-  height: 100%
-  line-height: 40px
-  font-size: 16px
+.EventInfo-Meta-Trend,
+.EventInfo-Meta-Title,
+.EventInfo-Meta-Social
+  display: block
   color: $c-white
+  font-size: 16px
 
-.EventInfo-Title
-  display: inline-block
-  width: 500px
-  font-size: 24px
+.EventInfo-Meta-Trend,
+.EventInfo-Meta-Hot
+  width: 160px
+  height: 30px
   line-height: 30px
-  text-align: center
-  color: $c-black
-  padding: 20px 0
+
+.EventInfo-Meta-Title
+  width: 700px
+  height: 60px
+  line-height: 60px
+  font-size: $t-size-m
+  // white-space: nowrap
+  overflow: hidden
+
+.EventInfo-Meta-wrapper
+  display: inline-block
+
+.EventInfo-Meta-Social
+  width: 100px
+  height: 60px
+  line-height: 60px
+

@@ -23,7 +23,7 @@ gem 'faraday'
 
 # view
 gem 'slim-rails'
-gem "flutie"
+gem 'flutie'
 
 # frontend framework
 gem 'bootstrap-sass', '~> 3.3.5'
@@ -38,6 +38,8 @@ gem 'capistrano', '~> 3.4.0'
 gem 'capistrano-bundler', '~> 1.1.2'
 gem 'capistrano-rails', '~> 1.1.1'
 gem 'capistrano-rvm', github: "capistrano/rvm"
+
+gem "active_model_serializers", '0.10.0.rc2'
 
 group :development do
   gem 'better_errors'

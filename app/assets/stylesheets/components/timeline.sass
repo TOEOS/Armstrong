@@ -1,0 +1,28 @@
+.Timeline
+  display: block
+  margin: 10px
+  background-color: #eee
+  height: 160px
+
+.vis-timeline
+  border: 0
+
+.vis-item
+  transition: 0.3s
+  cursor: pointer
+  background-color: $c-white
+  border-color: #ccc
+  opacity: 0.5
+  &:hover
+    opacity: 1
+
+.vis-item.vis-selected
+  border-color: $c-orange
+  opacity: 1
+
+.vis-selected.vis-item
+  color: $c-primary-text
+  background-color: $c-primary
+  // border: 1px solid $c-primary-text
+
+// .vis-selected.vis-line

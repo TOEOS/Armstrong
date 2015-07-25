@@ -1,60 +1,64 @@
-#event-data style="display:none;" data-id=1
+#event-data style="display:none;" data-id=@event.id
 
 .event-left-wrapper
-  .EventInfo
-    .EventInfo-Meta.EventInfo-Meta--up
-      .EventInfo-Meta-Hot 熱度值 90/100
-      .EventInfo-Meta-Trend 上 50%
-    .EventInfo-Title 事件字串事件字串事件字串事件字串事件字串事件字串
-  .Article.Article--in_event
-    .Timeline#timeline
-    .Article-Wrapper
-      #right-arrow.Arrow.Arrow--in_event_right
-        .Arrow-Image >
-        .Arrow-Content 下一篇
-      #left-arrow.Arrow.Arrow--in_event_left
-        .Arrow-Image <
-        .Arrow-Content 上一篇
-      .Article-Content
-        iframe src="http://localhost:3000/events" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"
+  .Event
+    .EventInfo
+      .EventInfo-Meta *{:class => @event.trend > 0 ? "EventInfo-Meta--up" : "EventInfo-Meta--down"}
+        .EventInfo-Meta-wrapper
+          .EventInfo-Meta-Hot = "熱門值 #{@event.hot}/100"
+          .EventInfo-Meta-Trend = "#{@event.trend.abs}%"
+        .EventInfo-Meta-Title = @event.description
+        .EventInfo-Meta-Social FB sharing
+    .Article.Article--in_event
+      .Timeline#timeline
+      .Article-Wrapper
+        #right-arrow.Arrow.Arrow--in_event_right
+          .Arrow-Image
+          / .Arrow-Date 12.03 14:30AM
+          .Arrow-Content
+        #left-arrow.Arrow.Arrow--in_event_left
+          .Arrow-Image
+          / .Arrow-Date 12.03 14:30AM
+          .Arrow-Content
+        .Article-Content
+
 
 .event-right-wrapper
   .Chatroom
     .Chatroom-List#chatroom-list
-      .Chatroom-MoreMessage#more-message
-        |下方還有更多訊息喔
-      .Chatroom-Article
-        .Chatroom-Article-Title
-          |文章標題文章標題文章標題文章標題文章標題文章標題文章標題文章標題
-        .Chatroom-Article-Comment.media
-          .media-left
-            =image_tag("message_icon_20x18")
-          .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
-        .Chatroom-Article-Comment.media
-          .media-left
-            =image_tag("message_icon_20x18")
-          .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
-        .Chatroom-Article-Comment.media
-          .media-left
-            =image_tag("message_icon_20x18")
-          .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
-        a.Chatroom-Article-Link
-          |< 回原文看更多連結
+      / .Chatroom-MoreMessage#more-message
+      /   |下方還有更多訊息喔
+      / .Chatroom-Article
+      /   .Chatroom-Article-Title
+      /     |文章標題文章標題文章標題文章標題文章標題文章標題文章標題文章標題
+      /   .Chatroom-Article-Comment.media
+      /     .media-left
+      /       =image_tag("message_icon_20x18")
+      /     .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
+      /   .Chatroom-Article-Comment.media
+      /     .media-left
+      /       =image_tag("message_icon_20x18")
+      /     .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
+      /   .Chatroom-Article-Comment.media
+      /     .media-left
+      /       =image_tag("message_icon_20x18")
+      /     .media-body 說一些奇怪的話說一些奇怪的話說一些奇怪的話說一些奇怪的話
+      /   a.Chatroom-Article-Link
+      /     |< 回原文看更多連結
 
-      .Chatroom-Message.media
-        .Chatroom-Message-UserPhoto.media-left
-          =image_tag("ptt_icon_100x100_03")
-        .media-body
-          .Chatroom-Message-Username.media-heading
-            |Username
-          .Chatroom-Message-Content
-            |說一些奇怪的話，說一些奇怪的話，說一些奇怪的話
+      / .Chatroom-Message.media
+      /   .Chatroom-Message-UserPhoto.media-left
+      /     =image_tag("ptt_icon_100x100_03")
+      /   .media-body
+      /     .Chatroom-Message-Username.media-heading
+      /       |Username
+      /     .Chatroom-Message-Content
+      /       |說一些奇怪的話，說一些奇怪的話，說一些奇怪的話
 
-    .media.Chatroom-InputArea
+    = form_for @event, remote: true, url: {action: "create_message", event_id: @event.id}, html: {class: 'media Chatroom-InputArea'} do |f|
       .media-left.Chatroom-InputArea-UserPhoto
-        =image_tag("ptt_icon_100x100_03")
-
-      .media-body.Chatroom-InputArea-Input
-        =text_field_tag 'message', nil, placeholder: '和別人一起聊一下你的想法吧...'
-
-
+        = image_tag(current_user ? current_user.image : "ptt_icon_100x100_03")
+      = f.fields_for :messages do |message_form|
+        .media-body.Chatroom-InputArea-Input
+          = message_form.text_field :content, placeholder: '和別人一起聊一下你的想法吧...'
+      = f.submit("送出訊息", class: 'Button Button--primary')

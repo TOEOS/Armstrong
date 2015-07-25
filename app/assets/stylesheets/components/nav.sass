@@ -1,5 +1,4 @@
 $nav-height: 60px
-
 .Nav
   display: flex
   justify-content: center
@@ -14,22 +13,22 @@ $nav-height: 60px
   margin: 0
   display: block
   height: 100%
-  font-size: 40px
+  font-size: $t-size-l
   color: $c-primary-text
   line-height: $nav-height
   text-align: center
 
 .Nav-LeftImage
   display: block
-  width: 60px
-  height: 100%
-  background-color: rgba(37, 89, 138, 0.8)
+  width: 40px
+  height: 40px
+  margin: 10px
 
 .Nav-RightImage
   display: block
-  width: 60px
-  height: 100%
-  background-color: rgba(37, 89, 138, 0.8)
+  width: 40px
+  height: 40px
+  margin: 10px
 
 .Nav-Dashed
   display: block
@@ -49,12 +48,15 @@ a.Nav-Login
   right: 50px
   display: inline-block
   height: 40px
-  width: 80px
+  width: 160px
   margin: 10px 0
   line-height: 40px
   text-decoration: none
-  font-size: 20px
-  border: 2px solid #6A3906
-  border-radius: 4px
-  color: #6A3906
+  font-size: 16px
+  border: 2px solid $c-white
+  border-radius: 8px
+  color: $c-white
+  background-color: #4862A3
   cursor: pointer
+  &:hover
+    background-color: darken(#4862A3, 10%)

@@ -7,11 +7,11 @@ namespace :jobs do
   end
   desc "Start event checking"
   task :event_check  => :environment do
-    run_limited_job('EventCheckJob')
+    run_limited_job('EventCheckJob', 'EventUpdateJob')
   end
   desc "Start comment checking"
   task :comment_check  => :environment do
-    run_limited_job('CommentCheckJob')
+    run_limited_job('CommentCheckJob', 'CommentUpdateJob')
   end
 end
 

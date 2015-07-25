@@ -3,20 +3,26 @@ class Event
     @articles = []
     @loadArticles()
   loadArticles: ->
-    @articles = new vis.DataSet(@mockArticlesData().articles)
-    @currentArticleIndex = @articles.length - 1
-    @timeline = new Timeline(@articles, this)
-    @chatroom = new Chatroom(this)
-    @initWebsocket()
-    # $.ajax(
-    #   url: '/api/events/1/articles.json'
-    #   method: 'get'
-    # ).done((data) =>
-    #   @articles = new vis.DataSet(data.articles)
-    #   @currentArticleIndex = @articles.length - 1
-    #   new Timeline(@articles)
-    # ).fail( ->
-    # )
+    # @articles = new vis.DataSet(@mockArticlesData().articles)
+    # @currentArticleIndex = @articles.length - 1
+    # @timeline = new Timeline(@articles, this)
+    # @chatroom = new Chatroom(this)
+    # @initWebsocket()
+    $.ajax(
+      url: '/api/events/1/articles.json'
+      method: 'get'
+    ).done((data) =>
+      _.forEach(data.articles, (article, key) ->
+        article.id = key + 1
+      )
+      @articles = new vis.DataSet(data.articles)
+      @currentArticleIndex = @articles.length - 1
+
+      @timeline = new Timeline(@articles, this)
+      @chatroom = new Chatroom(this)
+      @initWebsocket()
+    ).fail( ->
+    )
 
   initWebsocket: ->
     that = this
@@ -80,16 +86,6 @@ class Timeline
     @items = data_set
     container = document.getElementById('timeline');
 
-    # items = new vis.DataSet([
-    #   {id: 1, content: 'item 1', start: '2013-04-20', className: 'timeline-item'},
-    #   {id: 2, content: 'item 2', start: '2013-04-14'},
-    #   {id: 3, content: 'item 3', start: '2013-04-18'},
-    #   {id: 4, content: 'item 4', start: '2013-04-16'},
-    #   {id: 5, content: 'item 5', start: '2013-04-25'},
-    #   {id: 6, content: 'item 6', start: '2013-04-27'}
-    # ])
-
-    # Configuration for the Timeline
     options = {
       width: '100%',
       height: '160px',
@@ -141,9 +137,37 @@ class Timeline
     @refreshArrow()
 
   renderArticleContent: (article) ->
-    $('.Article-Content').html(article.article_content)
+    $('.Article-Content').html(@articleTemplate(article))
 
+  articleTemplate: (article) ->
+    """
+      <div class="Article-Info">
+        <span class="Article-Source Article-Source--ptt">#{article.source_type || 'PTT'}</span>
+        <span class="Article-AuthorAndDate">#{article.post_at}</span>
+      </div>
+      <div class="Article-Title">#{article.title}</div>
+      <a class="Article-Link" href="#{article.link}">#{article.link}</a>
+        <div class="Article-ArticleContent">#{article.article_content}</div>
+      <hr>
+      #{
+        _.reduce(article.comments, (total, comment) =>
+          total + @articleCommentTemplate(comment)
+        , "")
+      }
+    """
+
+  articleCommentTemplate: (comment) ->
+    """
+    <div class="Article-Comment">
+      <div class="Article-Comment-Info">
+        <span class="Article-Comment-UserName">#{comment.user.name}</span>
+        <span class="Article-Comment-Date">#{comment.create_at}</span>
+      </div>
+      <span class="Article-Comment-Content">#{comment.comment}</span>
+    </div>
+    """
   pushItem: (data) ->
+    @items.update(data.article)
 
   focusTimelinArticle: (index)->
     @timeline.focus(index)
@@ -153,7 +177,6 @@ class Timeline
     if @currentArticleIndex == undefined
       return
 
-    debugger
     next = @items.get(@currentArticleIndex + 1)
     prev = @items.get(@currentArticleIndex - 1)
 
@@ -212,11 +235,11 @@ class Chatroom
     """
     <div class="Chatroom-Message media js-push-elem">
       <div class="Chatroom-Message-UserPhoto media-left">
-        <img src="#{message.photo}">
+        <img src="#{message.user.image}">
       </div>
       <div class="media-body">
         <div class="Chatroom-Message-Username media-heading">
-          #{message.author}
+          #{message.user.name}
         </div>
         <div class="Chatroom-Message-Content">
           #{message.content}
@@ -250,7 +273,5 @@ class Chatroom
         <a class="Chatroom-Article-Link js-article-link" data-id="#{article.id}">回原文看更多連結</a>
       </div>
     """
-
-
 
 window.app = new Event()

@@ -18,6 +18,10 @@
 #
 
 class EventCommentsCrawler
+  extend DebugConfigs
+
+  attr_reader :event_articles
+
   class << self
     def call
       new.call
@@ -26,10 +30,14 @@ class EventCommentsCrawler
     def spawn(number)
       new.split(number)
     end
+
+    def spawn_json(number)
+      spawn(number).map {|crawler| crawler.event_articles.to_json }
+    end
   end
 
   def initialize(event_articles = nil)
-    @event_articles = event_articles || Article.includes(:comments).where("event_id IS NOT NULL")
+    @event_articles = event_articles || Article.includes(:comments).where("event_id IS NOT NULL").map(&:attributes)
   end
 
   def split(number)
@@ -43,11 +51,13 @@ class EventCommentsCrawler
   def call
     if !@called
       @event_articles.each do |a|
+        debug("checking article id: #{a['id']}")
+
         get_page = false
 
         while !get_page
           begin
-            doc = Nokogiri::HTML(open(a.link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
+            doc = Nokogiri::HTML(open(a['link'], 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
           rescue
             next
           end
@@ -56,17 +66,23 @@ class EventCommentsCrawler
 
         new_pushes = doc.css('.push')
 
-        new_pushe_bodies = new_pushes.css('.push-content').map(&:text)
+        new_push_bodies = new_pushes.css('.push-content').map {|new_push| new_push.text[1..-1] }
 
-        last_three_comments = a.comments.order(created_at: :desc).limit(3).map(&:comment)
+        last_three_comments = Article.find(a['id']).comments.order(created_at: :desc).limit(3).map(&:comment)
 
-        last_comment_index = last_three_comments.map {|c| new_pushe_bodies.index(c)}.compact.first
+        last_comment_index = last_three_comments.map {|c| new_push_bodies.index(c)}.compact.first || 0
 
-        article_id = a.id
+        article_id = a['id']
+
+        new_comments = []
 
         new_pushes[last_comment_index..-1].each do |p|
-          Comment.create(article_id: article_id, **comment_params(p))
+          new_comments << Comment.create(article_id: article_id, **comment_params(p))
         end
+
+        client = Apollo.create(a.event_id)
+        a.comments = new_comments
+        client.push(a, 'article_comment')
       end
 
       @called = true
@@ -76,6 +92,12 @@ class EventCommentsCrawler
   private
 
   def comment_params(doc)
-    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1]}
+    if doc.css('.push-ipdatetime').text.match(/^\d{2}\/\d{2} \d{2}:\d{2}/)
+      commented_at = Time.parse(doc.css('.push-ipdatetime').text[0..10])
+    else
+      commented_at = nil
+    end
+
+    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1], commented_at: commented_at}
   end
 end

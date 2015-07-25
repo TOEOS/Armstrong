@@ -18,7 +18,7 @@
 #
 
 class NewArticleCrawler
-  LOG_DEBUG_MSG = true
+  extend DebugConfigs
 
   attr_reader :links
 
@@ -32,7 +32,7 @@ class NewArticleCrawler
     end
 
     def spawn_json(number)
-      new.split(number).map {|crawler| crawler.links.to_json }
+      spawn(number).map {|crawler| crawler.links.to_json }
     end
   end
 
@@ -65,7 +65,7 @@ class NewArticleCrawler
   end
 
   def call
-    debugging_start_time = Time.now if LOG_DEBUG_MSG
+    debugging_start_time = Time.now
 
     if @links != []
       @links.each {|link| crawl_artcile(link)}
@@ -80,31 +80,29 @@ class NewArticleCrawler
 
       find_newest_article_date_page(last_article_date)
 
-      debugging_find_newest_article_date_page_time = Time.now if LOG_DEBUG_MSG
+      debugging_find_newest_article_date_page_time = Time.now
 
       find_newest_article_page(newest_three_article_titles) if newest_three_articles.any?
 
-      debugging_find_newest_article_page = Time.now if LOG_DEBUG_MSG
+      debugging_find_newest_article_page = Time.now
 
-      puts "start crawl_new_articles" if LOG_DEBUG_MSG
+      self.class.debug("start crawl_new_articles")
 
       crawl_new_articles
 
       @called = true
     end
 
-    if LOG_DEBUG_MSG
-      puts "start crawler at: #{debugging_start_time}"
-      puts "find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}" if @links == []
-      puts "find_newest_article_page at: #{debugging_find_newest_article_page}" if @links == []
-      puts "end crawler at: #{Time.now}"
-    end
+    self.class.debug("start crawler at: #{debugging_start_time}")
+    self.class.debug("find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}") if @links == []
+    self.class.debug("find_newest_article_page at: #{debugging_find_newest_article_page}") if @links == []
+    self.class.debug("end crawler at: #{Time.now}")
   end
 
   def find_newest_article_date_page(last_article_date)
-    puts 'start find_newest_article_date_page'
+    self.class.debug('start find_newest_article_date_page')
     while !@configs[:find_newest_article_date_page]
-      print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
+      self.class.debug("page: #{@configs[:page_number]}")
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -119,13 +117,13 @@ class NewArticleCrawler
         @configs[:find_newest_article_date_page] = true :
         @configs[:page_number] += 1
     end
-    puts "\n" if LOG_DEBUG_MSG
+    self.class.debug("\n")
   end
 
   def find_newest_article_page(newest_three_article_titles, for_spwan: false)
-    puts 'start find_newest_article_page' if LOG_DEBUG_MSG
+    self.class.debug('start find_newest_article_page')
     while !@configs[:find_newest_article_page]
-      print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
+      self.class.debug("page: #{@configs[:page_number]}")
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -158,11 +156,11 @@ class NewArticleCrawler
         @configs[:page_number] += 1
       end
     end
-    puts "\n" if LOG_DEBUG_MSG
+    self.class.debug("\n")
   end
 
   def crawl_new_articles(for_spwan: false)
-    print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
+    self.class.debug("page: #{@configs[:page_number]}")
     while true
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
@@ -212,6 +210,12 @@ class NewArticleCrawler
 
         comments.each {|c| Comment.create(article_id: article_id, **comment_params(c)) }
       end
+
+      if article.event_id
+        client = Apollo.create(article.event_id)
+        client.push(article, 'article')
+        client.push(article, 'article_comment')
+      end
     end
   end
 
@@ -232,12 +236,49 @@ class NewArticleCrawler
 
     keywords = JiebaService.new.keywords(content)
 
-    evnet_id = EventMatchService.best_match_event(@evnets, keywords).try(:id)
+    event_id = EventMatchService.best_match_event(@events, keywords).try(:id)
 
-    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link, event_id: event_id}
+    pic_links = content.scan(/https?:\/\/[a-zA-Z0-9_\/.?=&]+/)
+                  .select do |link|
+                    # get_link = false
+                    # get_404 = false
+                    # while !get_link && !get_404
+                    #   begin
+                    #     match = open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                    #     get_link = true
+                    #   rescue => e
+                    #     e.message == "404 Not Found" ? (get_404 = true; break;) : next
+                    #   end
+                    # end
+                    # get_404 ? nil : match
+                    begin
+                      open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                    rescue
+                      nil
+                    end
+                  end
+
+    {
+      arthor: arthor,
+      title: title,
+      post_at: post_at,
+      content: content,
+      comments_count: comments_count,
+      keywords: keywords,
+      link: link,
+      event_id: event_id,
+      source_type: 'ptt',
+      pic_links: pic_links
+    }
   end
 
   def comment_params(doc)
-    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1]}
+    if doc.css('.push-ipdatetime').text.match(/^\d{2}\/\d{2} \d{2}:\d{2}/)
+      commented_at = Time.parse(doc.css('.push-ipdatetime').text[0..10])
+    else
+      commented_at = nil
+    end
+
+    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1], commented_at: commented_at}
   end
 end

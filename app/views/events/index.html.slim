@@ -1,47 +1,24 @@
 .container
   .FiredArea
     .Card.Card--fired
-      .Card-Cover
+      = image_tag("ribbon", class: 'Card-FiredMark')
+      .Card-Cover data-img=@hot_events.first.articles_images.first
       .Card-SubWrapper
         .Card-Comment
-          |測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料
-        .Card-Meta.Card-Meta--up
-          .Card-Meta-Hot 99
-          .Card-Meta-Trend.Card-Meta-Trend--up 55%
+          = @hot_events.first.description
+        .Card-Meta *{:class => @hot_events.first.trend > 0 ? "Card-Meta--up" : "Card-Meta--down"}
+          .Card-Meta-Hot = "熱門值 #{@hot_events.first.hot}"
+          .Card-Meta-Trend = "#{@hot_events.first.trend.abs}%"
   .row
-    .col-md-4.col-sm-6
-      .Card 
-        .Card-Cover
-        .Card-SubWrapper
-          .Card-Comment
-            |測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料
-          .Card-Meta.Card-Meta--up
-            .Card-Meta-Hot 99
-            .Card-Meta-Trend 55%
-    .col-md-4.col-sm-6
-      .Card 
-        .Card-Cover
-        .Card-SubWrapper
-          .Card-Comment
-            |測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料
-          .Card-Meta.Card-Meta--down
-            .Card-Meta-Hot 99
-            .Card-Meta-Trend 55%
-    .col-md-4.col-sm-6
-      .Card 
-        .Card-Cover
-        .Card-SubWrapper
-          .Card-Comment
-            |測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料
-          .Card-Meta.Card-Meta--up
-            .Card-Meta-Hot 99
-            .Card-Meta-Trend 55%
-    .col-md-4.col-sm-6
-      .Card 
-        .Card-Cover
-        .Card-SubWrapper
-          .Card-Comment
-            |測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料測試資料
-          .Card-Meta.Card-Meta--up
-            .Card-Meta-Hot 99
-            .Card-Meta-Trend 55%
+    - @hot_events[1..-1].each do |event|
+      .col-md-4.col-sm-6
+        .Card
+          .Card-Cover data-img=event.articles_images.first
+          .Card-SubWrapper
+            .Card-Comment
+              = event.description
+            .Card-Meta *{:class => event.trend > 0 ? "Card-Meta--up" : "Card-Meta--down"}
+              .Card-Meta-Hot = "熱門值 #{event.hot}"
+              .Card-Meta-Trend = "#{event.trend.abs}%"
+
+.Slogan 10 大最熱門事件，讓你真正掌握社會脈動
