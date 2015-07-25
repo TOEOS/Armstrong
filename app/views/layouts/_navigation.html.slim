@@ -4,4 +4,17 @@ nav.Nav
   h1.Nav-Logo 端點
   .Nav-Dashed
   = image_tag("header_people.svg", class: 'Nav-LeftImage')
-  =link_to('Facebook 登入', user_omniauth_authorize_path(:facebook), class: 'Nav-Login')
+
+  - if user_signed_in?
+    .dropdown.Nav-Status
+      #dropdownMenu1.dropdown-toggle aria-expanded="true" aria-haspopup="true" data-toggle="dropdown" type="button"
+        =image_tag(current_user.image)
+        span.caret
+      ul.dropdown-menu aria-labelledby="dropdownMenu1"
+        li style="text-align: left; padding: 5px 20px;"
+          = current_user.name
+        li role="separator" class="divider"/
+        li
+          = link_to '登出', destroy_user_session_path, method: :delete
+  - else
+    =link_to('Facebook 登入', user_omniauth_authorize_path(:facebook), class: 'Nav-Login')

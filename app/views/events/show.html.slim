@@ -8,7 +8,8 @@
           .EventInfo-Meta-Hot = "熱門值 #{@event.hot}/100"
           .EventInfo-Meta-Trend = "#{@event.trend.abs}%"
         .EventInfo-Meta-Title = @event.description
-        .EventInfo-Meta-Social FB sharing
+        .EventInfo-Meta-Social
+          span.fb-share-button data-href=event_url(@event) data-layout="button_count"
     .Article.Article--in_event
       .Timeline#timeline
       .Article-Wrapper
@@ -55,10 +56,14 @@
       /     .Chatroom-Message-Content
       /       |說一些奇怪的話，說一些奇怪的話，說一些奇怪的話
 
-    = form_for @event, remote: true, url: {action: "create_message", event_id: @event.id}, html: {class: 'media Chatroom-InputArea'} do |f|
-      .media-left.Chatroom-InputArea-UserPhoto
-        = image_tag(current_user ? current_user.image : "ptt_icon_100x100_03")
-      = f.fields_for :messages do |message_form|
-        .media-body.Chatroom-InputArea-Input
-          = message_form.text_field :content, placeholder: '和別人一起聊一下你的想法吧...'
-      = f.submit("送出訊息", class: 'Button Button--primary')
+
+    - if user_signed_in?
+      = form_for @event, remote: true, url: {action: "create_message", event_id: @event.id}, html: {class: 'media Chatroom-InputArea'} do |f|
+        .media-left.Chatroom-InputArea-UserPhoto
+          = image_tag(current_user.image)
+        = f.fields_for :messages do |message_form|
+          .media-body.Chatroom-InputArea-Input
+            = message_form.text_field :content, placeholder: '和別人一起聊一下你的想法吧...'
+        = f.submit("送出訊息", class: 'Button Button--primary')
+    - else
+      .Chatroom-Login.Button.Button--fb Facebook 登入後留言

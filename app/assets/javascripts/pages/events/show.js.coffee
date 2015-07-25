@@ -1,7 +1,21 @@
+$(document).on 'click', '.social_share_column', ->
+    chatroom_path = $(this).attr("post-id")
+    console.log('http://www.ad-judge.com/posts/' + encodeURIComponent(slug));
+    FB.ui
+      method: 'share',
+      href: 'http://www.ad-judge.com/posts/' + encodeURIComponent(slug)
+    , (response) ->
+      if response && !response.error_code
+        console.log();
+      else
+        console.log();
+
+
 class Event
   constructor: ->
     @articles = []
     @loadArticles()
+
   loadArticles: ->
     # @articles = new vis.DataSet(@mockArticlesData().articles)
     # @currentArticleIndex = @articles.length - 1
@@ -97,7 +111,7 @@ class Timeline
       template: (item) ->
         "<div class='js-item-info' data-id='#{item.id}'>
           <img style='width: 30px; height: 30px;'
-            src='http://cdn8.staztic.com/app/a/6091/6091834/ptt-beta-2-l-124x124.png' alt=''>
+            src='/ptt_icon_50x50.png' alt=''>
           #{item.title}
         </div>"
     }
