@@ -232,7 +232,7 @@ class NewArticleCrawler
 
     event_id = EventMatchService.best_match_event(@events, keywords).try(:id)
 
-    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link, event_id: event_id}
+    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link, event_id: event_id, source_type: 'ptt'}
   end
 
   def comment_params(doc)
