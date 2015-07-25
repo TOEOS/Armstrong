@@ -3,11 +3,11 @@
 .event-left-wrapper
   .Event
     .EventInfo
-      .EventInfo-Meta.EventInfo-Meta--up
+      .EventInfo-Meta *{:class => @event.trend > 0 ? "EventInfo-Meta--up" : "EventInfo-Meta--down"}
         .EventInfo-Meta-wrapper
-          .EventInfo-Meta-Hot 熱度值 90/100
-          .EventInfo-Meta-Trend 50%
-        .EventInfo-Meta-Title 事件字串事件字串事件字串事件字串事件字串事件字串
+          .EventInfo-Meta-Hot = "熱門值 #{@event.hot}/100"
+          .EventInfo-Meta-Trend = "#{@event.trend.abs}%"
+        .EventInfo-Meta-Title = @event.description
         .EventInfo-Meta-Social FB sharing
     .Article.Article--in_event
       .Timeline#timeline
@@ -61,5 +61,3 @@
 
       .media-body.Chatroom-InputArea-Input
         =text_field_tag 'message', nil, placeholder: '和別人一起聊一下你的想法吧...'
-
-

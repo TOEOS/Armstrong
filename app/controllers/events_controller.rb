@@ -4,5 +4,10 @@ class EventsController < ApplicationController
   end
 
   def show
+    begin
+      @event = Event.find(params[:id])
+    rescue
+      @event = Event.new(description: "o~hohohohohohohoho")
+    end
   end
 end
