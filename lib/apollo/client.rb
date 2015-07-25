@@ -15,6 +15,11 @@ Here is example:
 =end
 class Apollo::Client
   SERVER_LOCATION = Settings.apollo.api_server.freeze
+  TYPE = {
+    article: 'article',
+    article_comment: 'article_comment',
+    message: 'message'
+  }.freeze
 
   attr_reader :channel_id
 
@@ -22,22 +27,75 @@ class Apollo::Client
     @channel_id = channel_id
   end
 
-  def push(obj)
-    Faraday.post do |req|
-      req.url "#{SERVER_LOCATION}", channel_id: channel_id
-      req.body serielize_obj(obj)
+  def push!(obj, type)
+    resp = Faraday.post do |req|
+      req.url("#{SERVER_LOCATION}armstrong_push", channel: channel_id)
+      req.body = serialize_obj(obj, type)
     end
+
+    if (resp.status/100) == 4
+      raise "Error, #{resp.status}"
+    end
+  end
+
+  def push(*args)
+    push!(*args)
+    true
+  rescue
+    false
   end
 
   private
 
-  def serielize_obj(obj)
-    case obj
-    when Article
-      # [TODO]
-      # ActiveModel::TimelineAticleSerializer.new(obj).to_json
-    when Reply
-    when Message
+  def serialize_obj(obj, type)
+    type = type.downcase
+    raise "arguments must be one of #{TYPE.values}" unless TYPE.values.include?(type)
+
+    case type
+    when TYPE[:article]
+      Jbuilder.encode do |json|
+        json.data_type type
+        json.data do
+          json.article do
+            json.id              obj.id
+            json.event_id        obj.event_id
+            json.title           obj.title
+            json.arthor          obj.arthor
+            json.post_at         obj.post_at
+            json.start           obj.start
+            json.content         obj.content
+            json.article_content obj.article_content
+            json.comments_count  obj.comments_count
+            json.keywords        obj.keywords
+            json.link            obj.link
+            json.comments        obj.comments
+          end
+        end
+      end
+    when TYPE[:article_comment]
+      Jbuilder.encode do |json|
+        json.data_type type
+        json.data do
+          json.article do
+            json.id              obj.id
+            json.event_id        obj.event_id
+            json.title           obj.title
+            json.comments        obj.comments
+          end
+        end
+      end
+    when TYPE[:message]
+      Jbuilder.encode do |json|
+        json.data_type type
+        json.data do
+          json.message do
+            json.id              obj.id
+            # json.event_id        obj.event_id
+            json.content         obj.content
+            json.user            obj.user
+          end
+        end
+      end
     end
   end
 end

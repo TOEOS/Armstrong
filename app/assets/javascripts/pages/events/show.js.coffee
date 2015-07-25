@@ -212,11 +212,11 @@ class Chatroom
     """
     <div class="Chatroom-Message media js-push-elem">
       <div class="Chatroom-Message-UserPhoto media-left">
-        <img src="#{message.photo}">
+        <img src="#{message.user.image}">
       </div>
       <div class="media-body">
         <div class="Chatroom-Message-Username media-heading">
-          #{message.author}
+          #{message.user.name}
         </div>
         <div class="Chatroom-Message-Content">
           #{message.content}
