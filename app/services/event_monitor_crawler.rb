@@ -23,21 +23,22 @@ class EventMonitorCrawler
   attr_reader :unclassed_articles
 
   class << self
-    def call
-      new.call
+    def call(**options)
+      new(**options).call
     end
 
-    def spawn(number)
-      new.split(number)
+    def spawn(number, **options)
+      new(**options).split(number)
     end
 
-    def spawn_json(number)
-      spawn(number).map {|crawler| crawler.unclassed_articles.to_json }
+    def spawn_json(number, **options)
+      spawn(number, **options).map {|crawler| crawler.unclassed_articles.to_json }
     end
   end
 
-  def initialize(unclassed_articles = nil)
-    @unclassed_articles = unclassed_articles || Article.where("event_id IS NULL AND post_at > ?", 1.days.ago).map(&:attributes)
+  def initialize(**options)
+    options[:post_at] ||= 1.days.ago
+    @unclassed_articles = options[:unclassed_articles] || Article.where("event_id IS NULL AND post_at > ?", options[:post_at]).map(&:attributes)
     @events = Event.all
   end
 
@@ -45,7 +46,7 @@ class EventMonitorCrawler
     if !@called
       @unclassed_articles.
         each_slice(@unclassed_articles.length / number + 1).
-        map {|group_of_articles| self.class.new(group_of_articles) }
+        map {|group_of_articles| self.class.new(unclassed_articles: group_of_articles) }
     end
   end
 
