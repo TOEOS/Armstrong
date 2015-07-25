@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
          .map do |e|
            OpenStruct.new(
              e.serializable_hash(
-               methods: [:hot, :trend]
+               methods: [:hot, :trend, :articles_images]
              )
            )
          end
@@ -39,5 +39,9 @@ class Event < ActiveRecord::Base
     else
       ((this_period_event_number - prev_period_event_number) / prev_period_event_number.to_f).round(2)*100
     end
+  end
+
+  def articles_images
+    articles.map(&:pic_links).flatten
   end
 end
