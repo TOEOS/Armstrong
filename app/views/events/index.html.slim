@@ -1,8 +1,8 @@
 .container
   .FiredArea
-    .Card.Card--fired
+    a.Card.Card--fired href=event_path(@hot_events.first.id)
       = image_tag("ribbon.svg", class: 'Card-FiredMark')
-      .Card-Cover data-img=@hot_events.first.articles_images.first
+      .Card-Cover.lazy data-original=@hot_events.first.articles_images.first
       .Card-SubWrapper
         .Card-Comment
           = @hot_events.first.description
@@ -12,8 +12,8 @@
   .row
     - @hot_events[1..-1].each do |event|
       .col-md-4.col-sm-6
-        .Card
-          .Card-Cover data-img=event.articles_images.first
+        a.Card href=event_path(event.id)
+          .Card-Cover.lazy data-original=event.articles_images.first
           .Card-SubWrapper
             .Card-Comment
               = event.description

@@ -8,13 +8,16 @@ $card-cover-width: 360px
   margin-top: 30px
   text-align: center
 
-.Card
+.Card,
+a.Card
   position: relative
   display: block
   min-height: 240px
   background-color: #FEFEFE
   margin-bottom: 30px
+  color: $c-black
   &:hover
+    text-decoration: none
     box-shadow: 0 0 4px #4D4D4D
 
 .Card--fired
@@ -59,7 +62,8 @@ $card-cover-width: 360px
 .Card-Cover
   display: block
   height: 240px
-  background-image: url(http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg)
+  background: repeating-linear-gradient(to right, #FAD799, #FAD799 10px, #FFE7BD 10px, #FFE7BD 20px) 
+  // background-image: url(http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg)
   background-size: cover
   background-position: 50%
 
@@ -81,7 +85,8 @@ $card-cover-width: 360px
 ////
 $fired-card-meta-height: 64px
 @media screen and (min-width: 750px)
-  .Card--fired
+  .Card--fired,
+  a.Card--fired
     position: relative
     display: inline-block
     padding-left: 360px

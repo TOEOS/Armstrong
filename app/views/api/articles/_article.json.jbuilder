@@ -11,3 +11,4 @@ json.article_content article.content
 json.comments_count article.comments_count
 json.keywords article.keywords
 json.link article.link
+json.comments article.comments

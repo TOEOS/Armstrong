@@ -1,7 +1,13 @@
-$(document).on 'click', '.social_share_column', ->
-  $(".lazy").lazyload
-    effect : "fadeIn"
+$(".lazy").lazyload
+  effect : "fadeIn"
 
+toDate = (str)->
+  date = new Date(str)
+  (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes()
+
+toYearDate = (str) ->
+  date = new Date(str)
+  (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes()  
 
 class Event
   constructor: ->
@@ -149,7 +155,7 @@ class Timeline
     """
       <div class="Article-Info">
         <span class="Article-Source Article-Source--ptt">#{article.source_type || 'PTT'}</span>
-        <span class="Article-AuthorAndDate">#{article.post_at}</span>
+        <span class="Article-AuthorAndDate">#{article.arthor + ' | ' + new Date(article.post_at).toLocaleDateString() + ' ' + new Date(article.post_at).toLocaleTimeString()}</span>
       </div>
       <div class="Article-Title">#{article.title}</div>
       <a class="Article-Link" href="#{article.link}">#{article.link}</a>
@@ -166,10 +172,10 @@ class Timeline
     """
     <div class="Article-Comment">
       <div class="Article-Comment-Info">
-        <span class="Article-Comment-UserName">#{comment.user.name}</span>
-        <span class="Article-Comment-Date">#{comment.create_at}</span>
+        <span class="Article-Comment-UserName">#{comment.commenter}</span>
+        <span class="Article-Comment-Date">#{toDate(comment.created_at)}</span>
       </div>
-      <span class="Article-Comment-Content">#{comment.comment}</span>
+      <span class="Article-Comment-Content">#{comment.comment.trim()}</span>
     </div>
     """
   pushItem: (data) ->
