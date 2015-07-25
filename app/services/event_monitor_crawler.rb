@@ -71,7 +71,7 @@ class EventMonitorCrawler
 
         new_push_number = doc.css('.push').length
 
-        if new_push_number > 100 || (new_push_number > 30 && (new_push_number - a['comments_count'])/(Time.now - a['post_at']) > (30/120.0))
+        if new_push_number > 100 || (new_push_number > 30 && (new_push_number - a['comments_count'])/(Time.now - a['post_at'].to_time) > (30/120.0))
           if belonged_event = belongs_to_existing_event(a)
             Article.find(a['id']).update!(event_id: belonged_event.id)
           else

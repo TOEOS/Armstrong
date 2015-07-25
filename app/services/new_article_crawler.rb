@@ -252,7 +252,7 @@ class NewArticleCrawler
                     # end
                     # get_404 ? nil : match
                     begin
-                      open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                      open(link) { |f| f.meta['content-type'].try(:match, 'image/') }
                     rescue
                       nil
                     end
