@@ -240,7 +240,7 @@ class NewArticleCrawler
 
     pic_links = content.scan(/https?:\/\/[a-zA-Z0-9_\/.?=&]+/)
                   .select do |link|
-                    open(link) { |f| f.meta['content_type'].match('image/') }
+                    open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
                   end
 
     {
