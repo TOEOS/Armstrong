@@ -1,14 +1,6 @@
 $(document).on 'click', '.social_share_column', ->
-    chatroom_path = $(this).attr("post-id")
-    console.log('http://www.ad-judge.com/posts/' + encodeURIComponent(slug));
-    FB.ui
-      method: 'share',
-      href: 'http://www.ad-judge.com/posts/' + encodeURIComponent(slug)
-    , (response) ->
-      if response && !response.error_code
-        console.log();
-      else
-        console.log();
+  $(".lazy").lazyload
+    effect : "fadeIn"
 
 
 class Event

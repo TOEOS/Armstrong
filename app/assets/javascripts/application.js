@@ -15,6 +15,8 @@
 //= require turbolinks
 
 //= require vis
+//= require lazyload
+
 //= require lodash
 // require reflux
 // require react
