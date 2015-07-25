@@ -23,8 +23,8 @@ class NewArticleCrawler
   attr_reader :links
 
   class << self
-    def call(**optinos)
-      new(**optinos).call
+    def call(**options)
+      new(**options).call
     end
 
     def spawn(number, **options)
@@ -37,10 +37,10 @@ class NewArticleCrawler
   end
 
   def initialize(**options)
-    @links = optinos[:links] || []
+    @links = options[:links] || []
     @configs = {
-      page_number: optinos[:page_number] || 10400,
-      start_date: optinos[:start_date].try(:strftime, "%_m/%d") || Date.today.strftime("%_m/%d"),
+      page_number: options[:page_number] || 10400,
+      start_date: options[:start_date].try(:strftime, "%_m/%d") || Date.today.strftime("%_m/%d"),
       find_newest_article_date_page: false,
       find_newest_article_page: false
     }
@@ -114,7 +114,7 @@ class NewArticleCrawler
 
       article_days = doc.css('.r-ent').css('.meta').css('.date').map(&:text).uniq
 
-      article_days.include?(last_article_date) ?
+      article_days.select {|date| date >= last_article_date}.length > 0 ?
         @configs[:find_newest_article_date_page] = true :
         @configs[:page_number] += 1
     end
