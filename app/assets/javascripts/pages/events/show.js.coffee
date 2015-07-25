@@ -144,6 +144,7 @@ class Timeline
     $('.Article-Content').html(article.article_content)
 
   pushItem: (data) ->
+    @items.update(data.article)
 
   focusTimelinArticle: (index)->
     @timeline.focus(index)
@@ -153,7 +154,6 @@ class Timeline
     if @currentArticleIndex == undefined
       return
 
-    debugger
     next = @items.get(@currentArticleIndex + 1)
     prev = @items.get(@currentArticleIndex - 1)
 
@@ -250,7 +250,5 @@ class Chatroom
         <a class="Chatroom-Article-Link js-article-link" data-id="#{article.id}">回原文看更多連結</a>
       </div>
     """
-
-
 
 window.app = new Event()
