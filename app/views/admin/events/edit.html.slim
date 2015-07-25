@@ -6,6 +6,7 @@ h1 = @event.description
     = f.text_field :description, class: 'form-control'
   .form-group
     label.control-label Keywords:
+    br
     - @event.keywords.each do |keyword|
       = text_field_tag 'event[keywords][]', keyword
   .form-group
@@ -18,14 +19,17 @@ h2 = "Articles: #{@event.articles.count}"
     p = "Title: #{article.title}"
     p = "Author: #{article.arthor}"
     p = article.content
-    - article.pic_links.each do |pic|
-      = image_tag(pic)
     p = article.keywords
     p = article.link
     .form-group
       label.control-label Pic Links:
-      - article.pic_links.each do |pic|
-        = text_field_tag 'article[pic_links][]', pic, class: 'form-control'
+      br
+      - (0..4).each do |index|
+        - if index < article.pic_links.length
+          = image_tag(article.pic_links[index])
+          = text_field_tag 'article[pic_links][]', article.pic_links[index], class: 'form-control'
+        - else
+          = text_field_tag 'article[pic_links][]', "", class: 'form-control'
     .form-group
       = hidden_field_tag 'event_id', @event.id
       = f.submit "Update", class: 'btn btn-primary'
