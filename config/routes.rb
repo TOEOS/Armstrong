@@ -10,10 +10,13 @@ Rails.application.routes.draw do
       resources :articles, only: [:index]
     end
   end
+  namespace :admin do
+    resources :events, only: [:edit, :update]
+  end
 
   root 'events#index'
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
-  mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
+  mount Sidekiq::Web => '/sidekiq'
 end

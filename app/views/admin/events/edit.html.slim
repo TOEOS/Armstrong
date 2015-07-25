@@ -1,0 +1,13 @@
+h1 = @event.description
+= form_for [:admin, @event] do |f|
+  - @event.keywords.each do |keyword|
+    = text_field_tag 'event[keywords][]', keyword
+  = f.submit "Update"
+
+h2 = "Articles: #{@event.articles.count}"
+- @event.articles.each_with_index do |article, index|
+  p = article.title
+  p = article.author
+  p = article.content
+  p = article.keywords
+  p = article.link
