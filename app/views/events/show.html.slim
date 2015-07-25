@@ -55,9 +55,10 @@
           .Chatroom-Message-Content
             |說一些奇怪的話，說一些奇怪的話，說一些奇怪的話
 
-    .media.Chatroom-InputArea
+    = form_for @event, remote: true, url: {action: "create_message", event_id: @event.id}, html: {class: 'media Chatroom-InputArea'} do |f|
       .media-left.Chatroom-InputArea-UserPhoto
         =image_tag("ptt_icon_100x100_03")
-
-      .media-body.Chatroom-InputArea-Input
-        =text_field_tag 'message', nil, placeholder: '和別人一起聊一下你的想法吧...'
+      = f.fields_for :messages do |message_form|
+        .media-body.Chatroom-InputArea-Input
+          = message_form.text_field :content, placeholder: '和別人一起聊一下你的想法吧...'
+      = f.submit "哭腰"

@@ -4,10 +4,14 @@ class EventsController < ApplicationController
   end
 
   def show
-    begin
       @event = Event.find(params[:id])
-    rescue
-      @event = Event.new(description: "o~hohohohohohohoho")
-    end
+  end
+
+  def create_message
+    @event = Event.find(params[:event_id])
+    @message = @event.messages.build(content: params[:event][:messages][:content])
+    @message.user = current_user || User.new(id: 1)
+    @message.save!
+    render json: {result: 'ok'}
   end
 end

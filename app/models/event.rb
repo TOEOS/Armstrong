@@ -1,6 +1,6 @@
 class Event < ActiveRecord::Base
   has_many :articles
-
+  has_many :messages
   serialize :keywords, Array
 
   def self.hot(num)
