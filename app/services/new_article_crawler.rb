@@ -240,7 +240,17 @@ class NewArticleCrawler
 
     pic_links = content.scan(/https?:\/\/[a-zA-Z0-9_\/.?=&]+/)
                   .select do |link|
-                    open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                    get_link = false
+                    get_404 = false
+                    while !get_link && !get_404
+                      begin
+                        match = open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                        get_link = true
+                      rescue => e
+                        e.message == "404 Not Found" ? (get_404 = true; break;) : next
+                      end
+                    end
+                    get_404 ? nil : match
                   end
 
     {
