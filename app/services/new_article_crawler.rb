@@ -210,6 +210,12 @@ class NewArticleCrawler
 
         comments.each {|c| Comment.create(article_id: article_id, **comment_params(c)) }
       end
+
+      if article.event_id
+        client = Apollo.create(article.event_id)
+        client.push(article, 'article')
+        client.push(article, 'article_comment')
+      end
     end
   end
 
