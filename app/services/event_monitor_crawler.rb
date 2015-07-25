@@ -18,6 +18,8 @@
 #
 
 class EventMonitorCrawler
+  extend DebugConfigs
+
   class << self
     def call
       new.call
