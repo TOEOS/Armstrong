@@ -33,6 +33,8 @@ gem 'sidekiq'
 gem 'whenever', :require => false
 gem 'sinatra', :require => nil
 
+gem "active_model_serializers", '0.10.0.rc2'
+
 group :development do
   gem 'better_errors'
   gem 'quiet_assets'
