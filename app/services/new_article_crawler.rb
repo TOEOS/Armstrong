@@ -65,7 +65,7 @@ class NewArticleCrawler
   end
 
   def call
-    self.class.debug("debugging_start_time = #{Time.now}")
+    debugging_start_time = Time.now
 
     if @links != []
       @links.each {|link| crawl_artcile(link)}
@@ -80,11 +80,11 @@ class NewArticleCrawler
 
       find_newest_article_date_page(last_article_date)
 
-      self.class.debug("debugging_find_newest_article_date_page_time = #{Time.now}")
+      debugging_find_newest_article_date_page_time = Time.now
 
       find_newest_article_page(newest_three_article_titles) if newest_three_articles.any?
 
-      self.class.debug("debugging_find_newest_article_page = #{Time.now}")
+      debugging_find_newest_article_page = Time.now
 
       self.class.debug("start crawl_new_articles")
 
@@ -230,7 +230,7 @@ class NewArticleCrawler
 
     keywords = JiebaService.new.keywords(content)
 
-    evnet_id = EventMatchService.best_match_event(@evnets, keywords).try(:id)
+    event_id = EventMatchService.best_match_event(@events, keywords).try(:id)
 
     {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link, event_id: event_id}
   end
