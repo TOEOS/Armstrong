@@ -20,6 +20,8 @@
 class NewArticleCrawler
   LOG_DEBUG_MSG = true
 
+  attr_reader :links
+
   class << self
     def call
       new.call
@@ -27,6 +29,10 @@ class NewArticleCrawler
 
     def spawn(number)
       new.split(number)
+    end
+
+    def spawn_json(number)
+      new.split(number).map {|crawler| new(crawler.links.to_json) }
     end
   end
 
