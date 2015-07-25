@@ -1,0 +1,25 @@
+.Button
+  display: inline-block
+  height: 40px
+  line-height: 40px
+  text-decoration: none
+  font-size: 16px
+  padding: 0 10px
+  cursor: pointer
+
+
+.Button--primary
+  background-color: $c-primary
+  color: $c-primary-text
+  border: 1px solid $c-orange
+  border-radius: 5px
+  &:hover
+    background-color: darken($c-primary, 10%)
+
+.Button--fb
+  border: 2px solid $c-white
+  border-radius: 8px
+  color: $c-white
+  background-color: #4862A3
+  &:hover
+    background-color: darken(#4862A3, 10%)

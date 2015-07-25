@@ -1,10 +1,11 @@
 $chatroom-width: 300px
-
+$chatroom-input-height: 120px
 .Chatroom
+  position: relative
   display: block
   height: 100%
   width: 100%
-  padding-bottom: 80px
+  padding-bottom: $chatroom-input-height
   background-color: $c-white
   border-radius: 5px
   overflow: hidden
@@ -67,8 +68,12 @@ a.Chatroom-Article-Link
 .Chatroom-InputArea
   position: absolute
   bottom: 0
-  height: 80px
+  height: $chatroom-input-height
+  width: 100%
   padding: 10px
+  input[type='submit']
+    float: right
+    margin-top: 10px
 
 .Chatroom-InputArea-UserPhoto
   img
@@ -77,5 +82,6 @@ a.Chatroom-Article-Link
 .Chatroom-InputArea-Input
   input,
   textarea
+    display: block
     width: 100%
-    height: 100%
+    height: 40px

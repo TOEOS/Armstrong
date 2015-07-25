@@ -1,5 +1,4 @@
 $nav-height: 60px
-
 .Nav
   display: flex
   justify-content: center
@@ -49,12 +48,15 @@ a.Nav-Login
   right: 50px
   display: inline-block
   height: 40px
-  width: 80px
+  width: 160px
   margin: 10px 0
   line-height: 40px
   text-decoration: none
-  font-size: 20px
-  border: 2px solid #6A3906
-  border-radius: 4px
-  color: #6A3906
+  font-size: 16px
+  border: 2px solid $c-white
+  border-radius: 8px
+  color: $c-white
+  background-color: #4862A3
   cursor: pointer
+  &:hover
+    background-color: darken(#4862A3, 10%)
