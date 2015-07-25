@@ -40,7 +40,7 @@ class NewArticleCrawler
     @links = optinos[:links] || []
     @configs = {
       page_number: optinos[:page_number] || 10400,
-      start_date: optinos[:start_date].try(:strftime, "%_m/%d") || Date.today.strftime("%_m/%d")
+      start_date: optinos[:start_date].try(:strftime, "%_m/%d") || Date.today.strftime("%_m/%d"),
       find_newest_article_date_page: false,
       find_newest_article_page: false
     }
