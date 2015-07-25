@@ -22,19 +22,27 @@ $card-cover-width: 360px
 .Card-Meta
   display: flex
   justify-content: space-around
-  height: 40px
+  height: 32px
 
 .Card-Meta--up
   background-color: $c-red
+  .Card-Meta-Trend
+    &:before
+      content: "\25B2"
+      color: $c-white
 .Card-Meta--down
   background-color: $c-green
+  .Card-Meta-Trend
+    &:before
+      content: "\25BC"
+      color: $c-white
 
 .Card-Meta-Hot,
 .Card-Meta-Trend
   display: inline-block
   height: 100%
-  width: 40px
-  line-height: 40px
+  width: auto
+  line-height: 32px
   font-size: 18px
   color: $c-white
 
@@ -52,7 +60,7 @@ $card-cover-width: 360px
   display: -webkit-box
   display: block
   height: 48px
-  font-size: 16px
+  font-size: 20px
   line-height: 24px
   margin: $card-margin
   text-align: center
