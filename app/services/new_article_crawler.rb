@@ -33,7 +33,7 @@ class NewArticleCrawler
   def initialize(links = nil)
     @links = links || []
     @configs = {
-      page_number: 9800,
+      page_number: 10400,
       find_newest_article_date_page: false,
       find_newest_article_page: false
     }
@@ -219,7 +219,7 @@ class NewArticleCrawler
 
     doc.css('.article-metaline, .article-metaline-right').remove
 
-    content = doc.text.split('--\n※ 發信站: 批踢踢實業坊(ptt.cc)').first
+    content = doc.text.split("--\n※ 發信站: 批踢踢實業坊(ptt.cc)").first
 
     comments_count = doc.css('.push').length
 
