@@ -1,12 +1,9 @@
-$.fn.scrollBottom = ->
-  return $(document).height() - this.scrollTop() - this.height()
-
 class Event
   constructor: ->
     @articles = []
     @loadArticles()
   loadArticles: ->
-    @articles = @mockArticlesData().articles
+    @articles = new vis.DataSet(@mockArticlesData().articles)
     @currentArticleIndex = @articles.length - 1
     @timeline = new Timeline(@articles, this)
     @chatroom = new Chatroom(this)
@@ -75,12 +72,12 @@ class Event
     }
 
 class Timeline
-  constructor: (items, event_controller) ->
+  constructor: (data_set, event_controller) ->
     @$leftArrow = $('#left-arrow')
     @$rightArrow = $('#right-arrow')
 
     @event_controller = event_controller
-    @items = items
+    @items = data_set
     container = document.getElementById('timeline');
 
     # items = new vis.DataSet([
@@ -110,14 +107,14 @@ class Timeline
     }
 
     # Create a Timeline
-    @timeline = new vis.Timeline(container,  @items, options)
-    @showArticle(_.last(@items).id)
+    @timeline = new vis.Timeline(container, @items, options)
+    @showArticleByIndex(@items.length)
     @initEvent()
 
   initEvent: ->
     @timeline.on 'select', (props) =>
       $item = $(props.event.target)
-      item_id = $item.attr('data-id') || $item.find('.js-item-info').attr('data-id')
+      item_id = $item.attr('data-id') || $item.find('.js-item-info').attr('data-id') || $item.closest('.js-item-info').attr('data-id')
       @showArticle(item_id)
 
     @$leftArrow.on 'click', =>
@@ -127,14 +124,20 @@ class Timeline
       @nextArticle()
 
   showArticle: (article_id) ->
-    itemIndex = _.findIndex(@items, 'id', Number(article_id))
+    itemIndex = -1
+    @items.forEach((data, index) ->
+      if Number(data.id) == Number(article_id)
+        itemIndex = index
+    )
     @showArticleByIndex(itemIndex)
 
   showArticleByIndex: (index) ->
-    itemData = @items[index]
+    if index == -1 || index == undefined
+      return
+    itemData = @items.get(index)
     @renderArticleContent(itemData)
     @focusTimelinArticle(index)
-    @currentArticleIndex = index
+    @currentArticleIndex = Number(index)
     @refreshArrow()
 
   renderArticleContent: (article) ->
@@ -143,15 +146,16 @@ class Timeline
   pushItem: (data) ->
 
   focusTimelinArticle: (index)->
-    @timeline.focus(index + 1)
-    @timeline.setSelection(index + 1)
+    @timeline.focus(index)
+    @timeline.setSelection(index)
 
   refreshArrow: ->
     if @currentArticleIndex == undefined
       return
 
-    next = @items[@currentArticleIndex + 1]
-    prev = @items[@currentArticleIndex - 1]
+    debugger
+    next = @items.get(@currentArticleIndex + 1)
+    prev = @items.get(@currentArticleIndex - 1)
 
     if next
       @$rightArrow.find('.Arrow-Content').text(next.title)
@@ -249,4 +253,4 @@ class Chatroom
 
 
 
-new Event()
+window.app = new Event()
