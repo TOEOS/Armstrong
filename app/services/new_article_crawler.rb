@@ -102,7 +102,7 @@ class NewArticleCrawler
   def find_newest_article_date_page(last_article_date)
     self.class.debug('start find_newest_article_date_page')
     while !@configs[:find_newest_article_date_page]
-      self.class.debug("page: #{@configs[:page_number]}\r", :print)
+      self.class.debug("page: #{@configs[:page_number]}")
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -123,7 +123,7 @@ class NewArticleCrawler
   def find_newest_article_page(newest_three_article_titles, for_spwan: false)
     self.class.debug('start find_newest_article_page')
     while !@configs[:find_newest_article_page]
-      self.class.debug("page: #{@configs[:page_number]}\r", :print)
+      self.class.debug("page: #{@configs[:page_number]}")
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -160,7 +160,7 @@ class NewArticleCrawler
   end
 
   def crawl_new_articles(for_spwan: false)
-    self.class.debug("page: #{@configs[:page_number]}\r", :print)
+    self.class.debug("page: #{@configs[:page_number]}")
     while true
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 

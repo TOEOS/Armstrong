@@ -8,6 +8,6 @@ module DebugConfigs
   end
 
   def debug(msg, output_strategy = :puts)
-    send(output_strategy, msg) if LOG_DEBUG_MSG
+    send(output_strategy, "#{Process.pid}: #{msg}") if LOG_DEBUG_MSG
   end
 end
