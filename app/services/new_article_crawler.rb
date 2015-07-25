@@ -27,12 +27,12 @@ class NewArticleCrawler
       new.call
     end
 
-    def spawn(number)
-      new.split(number)
+    def spawn(number, **options)
+      new(**options).split(number)
     end
 
-    def spawn_json(number)
-      spawn(number).map {|crawler| crawler.links.to_json }
+    def spawn_json(number, **options)
+      spawn(number, **options).map {|crawler| crawler.links.to_json }
     end
   end
 
