@@ -37,7 +37,7 @@ class EventMonitorCrawler
   end
 
   def initialize(unclassed_articles = nil)
-    @unclassed_articles = unclassed_articles || Article.where("event_id IS NULL AND post_at > ?", 1.days.ago)
+    @unclassed_articles = unclassed_articles || Article.where("event_id IS NULL AND post_at > ?", 1.days.ago).map(&:attributes)
     @events = Event.all
   end
 
@@ -52,13 +52,13 @@ class EventMonitorCrawler
   def call
     if !@called
       @unclassed_articles.each do |a|
-        debug("parsing article, id: #{a.id}\r")
+        debug("parsing article, id: #{a['id']}\r")
 
         get_page = false
 
         while !get_page
           begin
-            doc = Nokogiri::HTML(open(a.link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
+            doc = Nokogiri::HTML(open(a['link'], 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
           rescue
             next
           end
@@ -67,14 +67,14 @@ class EventMonitorCrawler
 
         new_push_number = doc.css('.push').length
 
-        if new_push_number > 100 || (new_push_number > 30 && (new_push_number - a.comments_count)/(Time.now - a.post_at) > (30/120.0))
+        if new_push_number > 100 || (new_push_number > 30 && (new_push_number - a['comments_count'])/(Time.now - a['post_at']) > (30/120.0))
           if belonged_event = belongs_to_existing_event(a)
-            belonged_event.articles << a
+            Article.find(a['id']).update(event_id: belonged_event.id)
           else
-            Event.new(keywords: a.keywords)
+            Event.new(keywords: a['keywords'])
           end
         else
-          debug("article not qualified, id: #{a.id}\r",:print)
+          debug("article not qualified, id: #{a['id']}\r",:print)
         end
       end
 
@@ -85,6 +85,6 @@ class EventMonitorCrawler
   private
 
   def belongs_to_existing_event(article)
-    EventMatchService.best_match_event(@evnets, keywords)
+    EventMatchService.best_match_event(@evnets, article['keywords'])
   end
 end
