@@ -36,10 +36,11 @@ class NewArticleCrawler
     end
   end
 
-  def initialize(links = nil)
-    @links = links || []
+  def initialize(**options)
+    @links = optinos[:links] || []
     @configs = {
-      page_number: 10400,
+      page_number: optinos[:page_number] || 10400,
+      start_date: optinos[:start_date].try(:strftime, "%_m/%d") || Date.today.strftime("%_m/%d")
       find_newest_article_date_page: false,
       find_newest_article_page: false
     }
@@ -50,7 +51,7 @@ class NewArticleCrawler
     if !@called
       newest_three_articles = Article.select(:title, :post_at).order(post_at: :desc).limit(3)
 
-      last_article_date = newest_three_articles.first.try(:post_date) || Date.today.strftime("%_m/%d")
+      last_article_date = newest_three_articles.first.try(:post_date) || @configs[:start_date]
 
       newest_three_article_titles = newest_three_articles.map(&:title)
 
@@ -60,7 +61,7 @@ class NewArticleCrawler
 
       crawl_new_articles(for_spwan: true)
 
-      @links.each_slice(@links.length / number + 1).map {|group_of_links| self.class.new(group_of_links) }
+      @links.each_slice(@links.length / number + 1).map {|group_of_links| self.class.new(links: group_of_links) }
     end
   end
 
@@ -74,7 +75,7 @@ class NewArticleCrawler
     else
       newest_three_articles = Article.select(:title, :post_at).order(post_at: :desc).limit(3)
 
-      last_article_date = newest_three_articles.first.try(:post_date) || Date.today.strftime("%_m/%d")
+      last_article_date = newest_three_articles.first.try(:post_date) || @configs[:start_date]
 
       newest_three_article_titles = newest_three_articles.map(&:title)
 
