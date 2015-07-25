@@ -75,7 +75,8 @@ class EventMonitorCrawler
           if belonged_event = belongs_to_existing_event(a)
             Article.find(a['id']).update(event_id: belonged_event.id)
           else
-            Event.new(keywords: a['keywords'])
+            event = Event.create(keywords: a['keywords'])
+            Article.find(a['id']).update(event_id: event.id)
           end
         else
           debug("article not qualified, id: #{a['id']}")
