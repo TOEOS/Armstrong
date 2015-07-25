@@ -93,7 +93,7 @@ class EventCommentsCrawler
   private
 
   def comment_params(doc)
-    if doc.css('.push-ipdatetime').text.match(/^\d{2}\/\d{2} \d{2}:\d{2}/)
+    if doc.css('.push-ipdatetime').text.match(/^ \d{2}\/\d{2} \d{2}:\d{2}/)
       commented_at = Time.parse(doc.css('.push-ipdatetime').text[0..10])
     else
       commented_at = nil
