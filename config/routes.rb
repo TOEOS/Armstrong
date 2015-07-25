@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   end
   namespace :admin do
     resources :events, only: [:edit, :update]
+    resources :articles, only: [:destroy, :update]
   end
 
   root 'events#index'

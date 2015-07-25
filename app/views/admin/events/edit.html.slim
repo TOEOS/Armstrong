@@ -1,13 +1,32 @@
 h1 = @event.description
+
 = form_for [:admin, @event] do |f|
-  - @event.keywords.each do |keyword|
-    = text_field_tag 'event[keywords][]', keyword
-  = f.submit "Update"
+  .form-group
+    label.control-label Description:
+    = f.text_field :description, class: 'form-control'
+  .form-group
+    label.control-label Keywords:
+    - @event.keywords.each do |keyword|
+      = text_field_tag 'event[keywords][]', keyword
+  .form-group
+    = f.submit "Update"
 
 h2 = "Articles: #{@event.articles.count}"
 - @event.articles.each_with_index do |article, index|
-  p = article.title
-  p = article.author
-  p = article.content
-  p = article.keywords
-  p = article.link
+  h3 ------------------------------------------------
+  = form_for [:admin, article] do |f|
+    p = "Title: #{article.title}"
+    p = "Author: #{article.arthor}"
+    p = article.content
+    - article.pic_links.each do |pic|
+      = image_tag(pic)
+    p = article.keywords
+    p = article.link
+    .form-group
+      label.control-label Pic Links:
+      - article.pic_links.each do |pic|
+        = text_field_tag 'article[pic_links][]', pic, class: 'form-control'
+    .form-group
+      = hidden_field_tag 'event_id', @event.id
+      = f.submit "Update", class: 'btn btn-primary'
+  = button_to 'delete', admin_article_path(article), params: {event_id: @event.id}, method: "delete", data: { confirm: 'Are you sure?', disable_with: 'loading...' }, class: 'btn btn-danger'
