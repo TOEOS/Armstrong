@@ -21,11 +21,13 @@ gem 'omniauth-facebook'
 gem 'rest_client'
 gem 'faraday'
 
-# template
+# view
 gem 'slim-rails'
+gem "flutie"
 
 # frontend framework
 gem 'bootstrap-sass', '~> 3.3.5'
+gem 'react-rails', '~> 1.0'
 
 gem 'sidekiq'
 gem 'whenever', :require => false
