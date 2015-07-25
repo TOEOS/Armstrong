@@ -23,7 +23,7 @@ gem 'faraday'
 
 # view
 gem 'slim-rails'
-gem "flutie"
+gem 'flutie'
 
 # frontend framework
 gem 'bootstrap-sass', '~> 3.3.5'

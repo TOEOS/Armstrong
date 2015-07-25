@@ -292,6 +292,3 @@ DEPENDENCIES
   web-console (~> 2.0)
   whenever
   zeus
-
-BUNDLED WITH
-   1.10.5
