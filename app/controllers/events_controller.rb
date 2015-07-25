@@ -12,6 +12,9 @@ class EventsController < ApplicationController
     @message = @event.messages.build(content: params[:event][:messages][:content])
     @message.user = current_user || User.new(id: 1)
     @message.save!
+
+    client = Apollo::Client.new(@event.id)
+    client.push(@message, 'message')
     render json: {result: 'ok'}
   end
 end
