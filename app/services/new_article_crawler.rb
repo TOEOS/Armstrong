@@ -43,6 +43,7 @@ class NewArticleCrawler
       find_newest_article_date_page: false,
       find_newest_article_page: false
     }
+    @events_keywords = Event.all
   end
 
   def split(number)
@@ -231,7 +232,11 @@ class NewArticleCrawler
 
     keywords = JiebaService.new.keywords(content)
 
-    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link}
+    event_id = @events_keywords.map {|event| [event.id, EventMatchService.new(event).match_level(keywords)] }.
+                 select {|id, match_level| match_level > 0.5 }.
+                 sort_by {|id, match_level| 1 - match_level}.first[0]
+
+    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link, event_id: event_id}
   end
 
   def comment_params(doc)
