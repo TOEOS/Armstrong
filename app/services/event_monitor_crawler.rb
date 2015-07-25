@@ -1,18 +1,18 @@
 # How to Use
-# 
+#
 # 1. monitor all articles
-# 
+#
 #      EventMonitorCrawler.call
-# 
+#
 #      or
-# 
+#
 #      EventMonitorCrawler.new.call
-# 
+#
 # 2. monitor all articles in N batch
-#   
+#
 #      event_monitor_crawlers = EventMonitorCrawler.spawn(4)
 #      #=> [#<EventMonitorCrawler>, #<EventMonitorCrawler>, #<EventMonitorCrawler>, #<EventMonitorCrawler>]
-# 
+#
 #      event_monitor_crawlers.each(&:call)
 #      #=> crawlers will start monitoring each by each
 #
@@ -56,14 +56,18 @@ class EventMonitorCrawler
 
         get_page = false
 
+        get_404 = false
+
         while !get_page
           begin
             doc = Nokogiri::HTML(open(a['link'], 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
-          rescue
-            next
+          rescue => e
+            e.message == "404 Not Found" ? (get_404 = true; break;) : next
           end
           get_page = true
         end
+
+        next if get_404
 
         new_push_number = doc.css('.push').length
 
@@ -85,6 +89,6 @@ class EventMonitorCrawler
   private
 
   def belongs_to_existing_event(article)
-    EventMatchService.best_match_event(@evnets, article['keywords'])
+    EventMatchService.best_match_event(@events, article['keywords'])
   end
 end
