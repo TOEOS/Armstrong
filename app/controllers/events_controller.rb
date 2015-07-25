@@ -4,7 +4,11 @@ class EventsController < ApplicationController
   end
 
   def show
-      @event = Event.find(params[:id])
+    begin
+      @event = Event.find(params[:id]).serializable_hash(methods: [:hot, :trend])
+    rescue
+      @event = Event.new(description: "o~hohohohohohohoho")
+    end
   end
 
   def create_message

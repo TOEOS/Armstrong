@@ -236,6 +236,12 @@ class NewArticleCrawler
   end
 
   def comment_params(doc)
-    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1]}
+    if doc.css('.push-ipdatetime').text.match(/^\d{2}\/\d{2} \d{2}:\d{2}/)
+      commented_at = Time.parse(doc.css('.push-ipdatetime').text[0..10])
+    else
+      commented_at = nil
+    end
+
+    {commenter: doc.css('.push-userid').text, comment: doc.css('.push-content').text[1..-1], commented_at: commented_at}
   end
 end
