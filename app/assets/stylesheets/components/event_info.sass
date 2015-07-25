@@ -10,8 +10,17 @@
 
 .EventInfo-Meta--up
   background-color: $c-red
+  .EventInfo-Meta-Trend
+    &:before
+      content: "\25B2"
+      color: $c-white
+
 .EventInfo-Meta--down
   background-color: $c-green
+  .EventInfo-Meta-Trend
+    &:before
+      content: "\25BC"
+      color: $c-white
 
 .EventInfo-Meta-Hot,
 .EventInfo-Meta-Trend
