@@ -18,7 +18,9 @@
 #
 
 class NewArticleCrawler
-  LOG_DEBUG_MSG = true
+  extend DebugConfigs
+
+  attr_reader :links
 
   class << self
     def call
@@ -28,15 +30,20 @@ class NewArticleCrawler
     def spawn(number)
       new.split(number)
     end
+
+    def spawn_json(number)
+      spawn(number).map {|crawler| crawler.links.to_json }
+    end
   end
 
   def initialize(links = nil)
     @links = links || []
     @configs = {
-      page_number: 9800,
+      page_number: 10400,
       find_newest_article_date_page: false,
       find_newest_article_page: false
     }
+    @events = Event.all
   end
 
   def split(number)
@@ -58,7 +65,7 @@ class NewArticleCrawler
   end
 
   def call
-    debugging_start_time = Time.now if LOG_DEBUG_MSG
+    self.class.debug("debugging_start_time = #{Time.now}")
 
     if @links != []
       @links.each {|link| crawl_artcile(link)}
@@ -73,31 +80,29 @@ class NewArticleCrawler
 
       find_newest_article_date_page(last_article_date)
 
-      debugging_find_newest_article_date_page_time = Time.now if LOG_DEBUG_MSG
+      self.class.debug("debugging_find_newest_article_date_page_time = #{Time.now}")
 
       find_newest_article_page(newest_three_article_titles) if newest_three_articles.any?
 
-      debugging_find_newest_article_page = Time.now if LOG_DEBUG_MSG
+      self.class.debug("debugging_find_newest_article_page = #{Time.now}")
 
-      puts "start crawl_new_articles" if LOG_DEBUG_MSG
+      self.class.debug("start crawl_new_articles")
 
       crawl_new_articles
 
       @called = true
     end
 
-    if LOG_DEBUG_MSG
-      puts "start crawler at: #{debugging_start_time}"
-      puts "find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}" if @links == []
-      puts "find_newest_article_page at: #{debugging_find_newest_article_page}" if @links == []
-      puts "end crawler at: #{Time.now}"
-    end
+    self.class.debug("start crawler at: #{debugging_start_time}")
+    self.class.debug("find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}") if @links == []
+    self.class.debug("find_newest_article_page at: #{debugging_find_newest_article_page}") if @links == []
+    self.class.debug("end crawler at: #{Time.now}")
   end
 
   def find_newest_article_date_page(last_article_date)
-    puts 'start find_newest_article_date_page'
+    self.class.debug('start find_newest_article_date_page')
     while !@configs[:find_newest_article_date_page]
-      print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
+      self.class.debug("page: #{@configs[:page_number]}\r", :print)
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -112,13 +117,13 @@ class NewArticleCrawler
         @configs[:find_newest_article_date_page] = true :
         @configs[:page_number] += 1
     end
-    puts "\n" if LOG_DEBUG_MSG
+    self.class.debug("\n")
   end
 
   def find_newest_article_page(newest_three_article_titles, for_spwan: false)
-    puts 'start find_newest_article_page' if LOG_DEBUG_MSG
+    self.class.debug('start find_newest_article_page')
     while !@configs[:find_newest_article_page]
-      print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
+      self.class.debug("page: #{@configs[:page_number]}\r", :print)
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -151,11 +156,11 @@ class NewArticleCrawler
         @configs[:page_number] += 1
       end
     end
-    puts "\n" if LOG_DEBUG_MSG
+    self.class.debug("\n")
   end
 
   def crawl_new_articles(for_spwan: false)
-    print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
+    self.class.debug("page: #{@configs[:page_number]}\r", :print)
     while true
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
@@ -219,13 +224,15 @@ class NewArticleCrawler
 
     doc.css('.article-metaline, .article-metaline-right').remove
 
-    content = doc.text.split('--\n※ 發信站: 批踢踢實業坊(ptt.cc)').first
+    content = doc.text.split("--\n※ 發信站: 批踢踢實業坊(ptt.cc)").first
 
     comments_count = doc.css('.push').length
 
     keywords = JiebaService.new.keywords(content)
 
-    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link}
+    evnet_id = EventMatchService.best_match_event(@evnets, keywords).try(:id)
+
+    {arthor: arthor, title: title, post_at: post_at, content: content, comments_count: comments_count, keywords: keywords, link: link, event_id: event_id}
   end
 
   def comment_params(doc)

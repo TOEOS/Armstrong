@@ -18,6 +18,10 @@
 #
 
 class EventCommentsCrawler
+  extend DebugConfigs
+
+  attr_reader :event_articles
+
   class << self
     def call
       new.call
@@ -25,6 +29,10 @@ class EventCommentsCrawler
 
     def spawn(number)
       new.split(number)
+    end
+
+    def spawn_json(number)
+      spawn(number).map {|crawler| crawler.event_articles.to_json }
     end
   end
 

@@ -18,6 +18,10 @@
 #
 
 class EventMonitorCrawler
+  extend DebugConfigs
+
+  attr_reader :unclassed_articles
+
   class << self
     def call
       new.call
@@ -26,10 +30,15 @@ class EventMonitorCrawler
     def spawn(number)
       new.split(number)
     end
+
+    def spawn_json(number)
+      spawn(number).map {|crawler| crawler.unclassed_articles.to_json }
+    end
   end
 
   def initialize(unclassed_articles = nil)
     @unclassed_articles = unclassed_articles || Article.where("event_id IS NULL AND post_at > ?", 1.days.ago)
+    @events = Event.all
   end
 
   def split(number)
@@ -43,6 +52,8 @@ class EventMonitorCrawler
   def call
     if !@called
       @unclassed_articles.each do |a|
+        debug("parsing article, id: #{a.id}\r")
+
         get_page = false
 
         while !get_page
@@ -62,6 +73,8 @@ class EventMonitorCrawler
           else
             Event.new(keywords: a.keywords)
           end
+        else
+          debug("article not qualified, id: #{a.id}\r",:print)
         end
       end
 
@@ -72,6 +85,6 @@ class EventMonitorCrawler
   private
 
   def belongs_to_existing_event(article)
-    # not implement yet, it will use keywords to check which event this article belongs to, and return that event
+    EventMatchService.best_match_event(@evnets, keywords)
   end
 end
