@@ -8,7 +8,7 @@ class EventMatchService
                   sort_by {|event, match_level| 1 - match_level}.first(number).
                   map {|event, match_level| event }
 
-      debug("\rclassify to Event.id = #{matches.first.id}                    ") if !matches.empty?
+      debug("classify to Event.id = #{matches.first.id}") if !matches.empty?
 
       number == 1 ? matches.first : matches
     end

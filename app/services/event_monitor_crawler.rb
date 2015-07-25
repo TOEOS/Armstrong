@@ -52,7 +52,7 @@ class EventMonitorCrawler
   def call
     if !@called
       @unclassed_articles.each do |a|
-        debug("\rparsing article, id: #{a['id']}                    ", :print)
+        debug("parsing article, id: #{a['id']}", :print)
 
         get_page = false
 
@@ -74,7 +74,7 @@ class EventMonitorCrawler
             Event.new(keywords: a['keywords'])
           end
         else
-          debug("\rarticle not qualified, id: #{a['id']}                    ",:print)
+          debug("article not qualified, id: #{a['id']}",:print)
         end
       end
 
