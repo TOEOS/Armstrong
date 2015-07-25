@@ -37,7 +37,7 @@ class EventCommentsCrawler
   end
 
   def initialize(event_articles = nil)
-    @event_articles = event_articles || Article.includes(:comments).where("event_id IS NOT NULL")
+    @event_articles = event_articles || Article.includes(:comments).where("event_id IS NOT NULL").map(&:attributes)
   end
 
   def split(number)
@@ -51,11 +51,13 @@ class EventCommentsCrawler
   def call
     if !@called
       @event_articles.each do |a|
+        debug("checking article id: #{a['id']}")
+
         get_page = false
 
         while !get_page
           begin
-            doc = Nokogiri::HTML(open(a.link, 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
+            doc = Nokogiri::HTML(open(a['link'], 'Cookie'=> 'over18=1')).css('#main-container').css('#main-content')
           rescue
             next
           end
@@ -64,13 +66,13 @@ class EventCommentsCrawler
 
         new_pushes = doc.css('.push')
 
-        new_pushe_bodies = new_pushes.css('.push-content').map(&:text)
+        new_push_bodies = new_pushes.css('.push-content').map {|new_push| new_push.text[1..-1] }
 
-        last_three_comments = a.comments.order(created_at: :desc).limit(3).map(&:comment)
+        last_three_comments = Article.find(a['id']).comments.order(created_at: :desc).limit(3).map(&:comment)
 
-        last_comment_index = last_three_comments.map {|c| new_pushe_bodies.index(c)}.compact.first
+        last_comment_index = last_three_comments.map {|c| new_push_bodies.index(c)}.compact.first || 0
 
-        article_id = a.id
+        article_id = a['id']
 
         new_pushes[last_comment_index..-1].each do |p|
           Comment.create(article_id: article_id, **comment_params(p))
