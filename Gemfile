@@ -33,6 +33,12 @@ gem 'sidekiq'
 gem 'whenever', :require => false
 gem 'sinatra', :require => nil
 
+# deploy
+gem 'capistrano', '~> 3.4.0'
+gem 'capistrano-bundler', '~> 1.1.2'
+gem 'capistrano-rails', '~> 1.1.1'
+gem 'capistrano-rvm', github: "capistrano/rvm"
+
 gem "active_model_serializers", '0.10.0.rc2'
 
 group :development do

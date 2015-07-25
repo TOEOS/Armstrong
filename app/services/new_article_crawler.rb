@@ -212,7 +212,7 @@ class NewArticleCrawler
       end
 
       if article.event_id
-        client = Apollo.create(article.event_id)
+        client = Apollo::Client.new(article.event_id)
         client.push(article, 'article')
         client.push(article, 'article_comment')
       end
@@ -240,7 +240,22 @@ class NewArticleCrawler
 
     pic_links = content.scan(/https?:\/\/[a-zA-Z0-9_\/.?=&]+/)
                   .select do |link|
-                    open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                    # get_link = false
+                    # get_404 = false
+                    # while !get_link && !get_404
+                    #   begin
+                    #     match = open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                    #     get_link = true
+                    #   rescue => e
+                    #     e.message == "404 Not Found" ? (get_404 = true; break;) : next
+                    #   end
+                    # end
+                    # get_404 ? nil : match
+                    begin
+                      open(link) { |f| f.meta['content_type'].try(:match, 'image/') }
+                    rescue
+                      nil
+                    end
                   end
 
     {
