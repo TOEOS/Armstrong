@@ -9,15 +9,22 @@ $card-cover-width: 360px
   text-align: center
 
 .Card
+  position: relative
   display: block
   min-height: 240px
   background-color: #FEFEFE
   margin-bottom: 30px
-  overflow: hidden
   &:hover
     box-shadow: 0 0 4px #4D4D4D
 
 .Card--fired
+  img.Card-FiredMark
+    position: absolute
+    top: -10px
+    left: -30px
+    display: block
+    height: 95px
+    z-index: 3
 
 .Card-Meta
   display: flex
@@ -72,6 +79,7 @@ $card-cover-width: 360px
 ////////////
 // RWD
 ////
+$fired-card-meta-height: 64px
 @media screen and (min-width: 750px)
   .Card--fired
     position: relative
@@ -90,23 +98,23 @@ $card-cover-width: 360px
       position: relative
       display: block
       height: 100%
-      padding-bottom: 80px
+      padding-bottom: $fired-card-meta-height
       overflow: hidden
     .Card-Meta
       position: absolute
       display: block
       right: 0
       bottom: 0
-      height: 80px
+      height: $fired-card-meta-height
       width: 100%
     .Card-Meta-Hot,
     .Card-Meta-Trend
       display: block
-      height: 40px
+      height: $fired-card-meta-height / 2
       width: 100%
       text-align: center
     .Card-Comment
       font-size: 20px
       line-height: 1.8
-      height: 160px
+      height: 150px
       -webkit-line-clamp: 4
