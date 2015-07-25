@@ -23,8 +23,8 @@ class NewArticleCrawler
   attr_reader :links
 
   class << self
-    def call
-      new.call
+    def call(**optinos)
+      new(**optinos).call
     end
 
     def spawn(number, **options)
