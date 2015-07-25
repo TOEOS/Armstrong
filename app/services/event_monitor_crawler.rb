@@ -30,6 +30,7 @@ class EventMonitorCrawler
 
   def initialize(unclassed_articles = nil)
     @unclassed_articles = unclassed_articles || Article.where("event_id IS NULL AND post_at > ?", 1.days.ago)
+    @events = Event.all
   end
 
   def split(number)
@@ -72,6 +73,6 @@ class EventMonitorCrawler
   private
 
   def belongs_to_existing_event(article)
-    # not implement yet, it will use keywords to check which event this article belongs to, and return that event
+    EventMatchService.best_match_event(@evnets, keywords)
   end
 end
