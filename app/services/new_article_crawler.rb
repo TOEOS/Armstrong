@@ -18,6 +18,9 @@
 #
 
 class NewArticleCrawler
+  DEBUGGING_MODE = true
+  LOG_DEBUG_MSG = Rails.env == 'development' && DEBUGGING_MODE
+
   class << self
     def call
       new.call
@@ -56,6 +59,8 @@ class NewArticleCrawler
   end
 
   def call
+    debugging_start_time = Time.now if LOG_DEBUG_MSG
+
     if @links != []
       @links.each {|link| crawl_artcile(link)}
 
@@ -69,17 +74,31 @@ class NewArticleCrawler
 
       find_newest_article_date_page(last_article_date)
 
+      debugging_find_newest_article_date_page_time = Time.now if LOG_DEBUG_MSG
+
       find_newest_article_page(newest_three_article_titles) if newest_three_articles.any?
+
+      debugging_find_newest_article_page = Time.now if LOG_DEBUG_MSG
+
+      puts "start crawl_new_articles" if LOG_DEBUG_MSG
 
       crawl_new_articles
 
       @called = true
     end
+
+    if LOG_DEBUG_MSG
+      puts "start crawler at: #{debugging_start_time}", 
+           "find_newest_article_date_page at: #{debugging_find_newest_article_date_page_time}", 
+           "find_newest_article_page at: #{debugging_find_newest_article_page}", 
+           "end crawler at: #{Time.now}"
+    end
   end
 
   def find_newest_article_date_page(last_article_date)
+    puts 'start find_newest_article_date_page'
     while !@configs[:find_newest_article_date_page]
-      # print "page: #{@configs[:page_number]}\r"
+      print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -94,10 +113,13 @@ class NewArticleCrawler
         @configs[:find_newest_article_date_page] = true :
         @configs[:page_number] += 1
     end
+    puts "\n" if LOG_DEBUG_MSG
   end
 
   def find_newest_article_page(newest_three_article_titles, for_spwan: false)
+    puts 'start find_newest_article_page' if LOG_DEBUG_MSG
     while !@configs[:find_newest_article_page]
+      print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
       begin
@@ -130,9 +152,11 @@ class NewArticleCrawler
         @configs[:page_number] += 1
       end
     end
+    puts "\n" if LOG_DEBUG_MSG
   end
 
   def crawl_new_articles(for_spwan: false)
+    print "page: #{@configs[:page_number]}\r" if LOG_DEBUG_MSG
     while true
       ptt_url = "https://www.ptt.cc/bbs/Gossiping/index#{@configs[:page_number]}.html"
 
@@ -161,7 +185,6 @@ class NewArticleCrawler
   end
 
   def crawl_artcile(link, crawl_comments: true)
-    # puts "article: #{link}"
     get_article = false
 
     while !get_article
