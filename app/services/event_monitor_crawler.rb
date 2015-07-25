@@ -20,6 +20,8 @@
 class EventMonitorCrawler
   extend DebugConfigs
 
+  attr_reader :unclassed_articles
+
   class << self
     def call
       new.call
@@ -27,6 +29,10 @@ class EventMonitorCrawler
 
     def spawn(number)
       new.split(number)
+    end
+
+    def spawn_json(number)
+      spawn(number).map {|crawler| crawler.unclassed_articles.to_json }
     end
   end
 
