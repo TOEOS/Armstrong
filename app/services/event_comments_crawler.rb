@@ -80,9 +80,10 @@ class EventCommentsCrawler
           new_comments << Comment.create(article_id: article_id, **comment_params(p))
         end
 
-        client = Apollo.create(a.event_id)
-        a.comments = new_comments
-        client.push(a, 'article_comment')
+        client = Apollo::Client.new(a['event_id'])
+        article = Article.find(a['id'])
+        article.comments = new_comments
+        client.push(article, 'article_comment')
       end
 
       @called = true
