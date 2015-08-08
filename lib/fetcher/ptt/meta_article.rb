@@ -10,7 +10,8 @@ module Fetcher
                   :title,
                   :tag,
                   :is_re,
-                  :is_deleted
+                  :is_deleted,
+                  :article
 
       def initialize(doc)
         @doc = doc
@@ -56,7 +57,7 @@ module Fetcher
       end
 
       def parse_title
-        text = raw_title
+        text = raw_title.dup
 
         is_re = text.slice!(/^Re:/) ? true : false
         # 如果該篇文章被刪除，則會找不到 tag，所以使用 try

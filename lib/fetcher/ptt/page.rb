@@ -3,7 +3,7 @@ module Fetcher
     class Page
       Paging = Struct.new(:prev_url, :next_url)
 
-      attr_reader :url, :raw_data, :meta_articles, :paging
+      attr_reader :url, :raw_data, :articles, :paging
 
       def self.fetch(*args)
         new(*args).fetch
@@ -23,15 +23,17 @@ module Fetcher
       end
 
       def next
+        return @next_page if @next_page
         return nil if paging.next_url.nil?
 
-        Page.new(paging.next_url)
+        @next_page ||= Page.new(paging.next_url)
       end
 
       def prev
+        return @prev_page if @prev_page
         return nil if paging.prev_url.nil?
 
-        Page.new(paging.prev_url)
+        @prev_page ||= Page.new(paging.prev_url)
       end
 
       private
@@ -41,14 +43,14 @@ module Fetcher
       end
 
       def parse_info
-        @meta_articles = parse_meta_articles
+        @articles = parse_meta_articles
         @paging = parse_paging
       end
 
       def parse_meta_articles
-        @meta_articles =
+        @articles =
           doc.css('.r-ent').map do |meta_article_raw_data|
-            MetaArticle.new(meta_article_raw_data)
+            Article.new(meta_article_raw_data)
           end
       end
 
