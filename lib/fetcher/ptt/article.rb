@@ -21,6 +21,7 @@ module Fetcher
 
       attr_reader :meta_article,
                   :url,
+                  :url_id,
                   :raw_data,
                   :raw_title,
                   :title,
@@ -31,7 +32,12 @@ module Fetcher
                   :raw_content,
                   :content,
                   :signature_line,
-                  :author_ip
+                  :author_ip,
+                  :comments
+
+      def self.fetch(*args)
+        new(*args).fetch
+      end
 
       def initialize(*args)
         @is_fetched = false
@@ -85,6 +91,8 @@ module Fetcher
       end
 
       def parse_article_and_assign
+        @url_id = parse_url_id
+
         @raw_title = parse_raw_title
 
         title_info = parse_title
@@ -101,6 +109,12 @@ module Fetcher
         @content = content_info[:content]
         @signature_line = content_info[:signature_line]
         @author_ip = content_info[:author_ip]
+
+        @comments = parse_comments
+      end
+
+      def parse_url_id
+        url.match(%r{bbs/Gossiping/(?<url_id>.*)(\.html)\Z})[:url_id]
       end
 
       def parse_raw_title
@@ -136,7 +150,7 @@ module Fetcher
       end
 
       def parse_raw_content
-        content_elem = doc.css('#main-content').dup
+        content_elem = doc.dup.css('#main-content')
 
         content_elem.css('.article-metaline').remove
         content_elem.css('.article-metaline-right').remove
@@ -158,6 +172,12 @@ module Fetcher
         content = content_text.lstrip
 
         { content: content, signature_line: signature_line, author_ip: author_ip }
+      end
+
+      def parse_comments
+        doc.css('.push').map do |comment_doc|
+          Comment.new(comment_doc, self)
+        end
       end
     end
   end
