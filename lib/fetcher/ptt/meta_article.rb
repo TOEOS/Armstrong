@@ -1,5 +1,7 @@
 module Fetcher
   class PTT
+    # 這是 Article 的前置物件，也是 Page 抓取的文章標題物件。
+    # 當 Nokogiri 解析文章標題後，傳入 Article ，會先建立 MetaArticle，供 Article 或其操作使用。
     class MetaArticle
       attr_reader :doc,
                   :push_number,

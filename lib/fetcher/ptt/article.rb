@@ -1,5 +1,17 @@
 module Fetcher
   class PTT
+    # 你可以傳入 Url 來建立 Article
+    # => Aritcle.new('bbs/Gossiping/M.1437196884.A.DE2.html')
+    #
+    # 或是傳入 Page 物件所抓取到標題的 Nokogiri::Element
+    # => Article.new(doc.css('.r-ent').first)
+    #
+    # 使用 .fetch  來抓取文章本文
+    # => article = Aritcle.new('bbs/Gossiping/M.1437196884.A.DE2.html')
+    # => article.fetch
+    #
+    # 或是使用 fetch 的 shortcut
+    # => Aritcle.fetch('bbs/Gossiping/M.1437196884.A.DE2.html')
     class Article
       META_TAG_TEXT_IN_PAGE = {
         title: '標題',

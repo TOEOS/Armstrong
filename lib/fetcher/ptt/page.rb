@@ -1,5 +1,14 @@
 module Fetcher
   class PTT
+    # 以頁面為基礎的爬蟲
+    # 你可以傳入網址建立物件
+    # => Fetcher::PTT::Page.new('bbs/Gossiping/index7950.html')
+    #
+    # 使用 fetch 來進行抓取
+    # => Fetcher::PTT::Page.new('bbs/Gossiping/index7950.html').fetch
+    #
+    # 以上兩步驟可合併為 shortcut
+    # => Fetcher::PTT::Page.fetch('bbs/Gossiping/index7950.html')
     class Page
       Paging = Struct.new(:prev_url, :next_url)
       PAGE_URL_PATTERN = %r{bbs/Gossiping/index(?<page_id>\d+)\.html\Z}
