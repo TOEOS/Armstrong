@@ -2,6 +2,7 @@ module Fetcher
   class PTT
     class Page
       Paging = Struct.new(:prev_url, :next_url)
+      PAGE_URL_PATTERN = %r{bbs/Gossiping/index(?<page_id>\d+)\.html\Z}
 
       attr_reader :url, :raw_data, :articles, :paging
 
@@ -45,6 +46,10 @@ module Fetcher
       def parse_info
         @articles = parse_meta_articles
         @paging = parse_paging
+
+        # Page's url will be 'bbs/Gossiping/index.html' when passin newest url.
+        # That will cause inconsistent with other page. We should correct it by prev page url.
+        @url = current_url_by_prev_page_url if url_is_newest?
       end
 
       def parse_meta_articles
@@ -64,6 +69,17 @@ module Fetcher
 
       def doc
         @doc ||= Nokogiri::HTML(raw_data)
+      end
+
+      # bbs/Gossiping/index.html => true
+      # bbs/Gossiping/index10789.html => false
+      def url_is_newest?
+        !url.match(PAGE_URL_PATTERN)
+      end
+
+      def current_url_by_prev_page_url
+        page_id = paging.prev_url.match(PAGE_URL_PATTERN)[:page_id]
+        "bbs/Gossiping/index#{page_id}.html"
       end
     end
   end
