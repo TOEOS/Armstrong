@@ -1,0 +1,3 @@
+class Fetcher::Base
+
+end
