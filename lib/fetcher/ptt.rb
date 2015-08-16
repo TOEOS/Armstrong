@@ -7,18 +7,6 @@ class Fetcher::PTT < Fetcher::Base
 
   end
 
-  def articles_by_page(number)
-
-  end
-
-  def articles_until(date)
-
-  end
-
-  def articles(number)
-
-  end
-
   private
 
   def board
