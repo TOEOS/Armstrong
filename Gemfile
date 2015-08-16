@@ -52,4 +52,9 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
   gem 'zeus'
   gem 'rspec-rails', '~> 3.0'
+  gem 'shoulda-matchers'
+  
+  gem 'guard'
+  gem 'guard-rspec', require: false
+  gem 'ruby_gntp'
 end

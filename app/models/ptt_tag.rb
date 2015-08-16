@@ -9,7 +9,7 @@ class PTTTag < ActiveRecord::Base
   has_many :raw_ptt_articles
 
   # validation macros
-  validates :url, presence: true
+  validates :name, presence: true
 
   # callback macros
 

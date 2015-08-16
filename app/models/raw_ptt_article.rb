@@ -9,7 +9,7 @@ class RawPTTArticle < ActiveRecord::Base
   belongs_to :ptt_tag
 
   # validation macros
-  validates :name, presence: true
+  validates :url, presence: true
 
   # callback macros
 
