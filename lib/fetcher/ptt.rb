@@ -20,5 +20,4 @@ class Fetcher::PTT < Fetcher::Base
       "https://www.ptt.cc/bbs/#{board}/index.html"
     end
   end
-
 end

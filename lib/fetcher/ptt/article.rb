@@ -125,7 +125,7 @@ module Fetcher
         text = raw_title.dup
 
         is_re = text.slice!(/^Re:/) ? true : false
-        title_tag   = text.slice!(/\[(.*)\]/).try(:slice, /\[(.*)\]/, 1)
+        title_tag = text.slice!(/\[(.*)\]/).try(:slice, /\[(.*)\]/, 1)
         title = text.strip
 
         { is_re: is_re, title: title, title_tag: title_tag }

@@ -53,7 +53,7 @@ group :development, :test do
   gem 'zeus'
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda-matchers'
-  
+
   gem 'guard'
   gem 'guard-rspec', require: false
   gem 'ruby_gntp'

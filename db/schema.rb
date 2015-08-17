@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150816091144) do
+ActiveRecord::Schema.define(version: 20150817172514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,18 @@ ActiveRecord::Schema.define(version: 20150816091144) do
 
   add_index "raw_ptt_articles", ["ptt_tag_id"], name: "index_raw_ptt_articles_on_ptt_tag_id", using: :btree
 
+  create_table "raw_ptt_comments", force: :cascade do |t|
+    t.integer  "comment_type"
+    t.string   "commenter"
+    t.text     "content"
+    t.datetime "date"
+    t.integer  "raw_ptt_article_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "raw_ptt_comments", ["raw_ptt_article_id"], name: "index_raw_ptt_comments_on_raw_ptt_article_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -103,4 +115,5 @@ ActiveRecord::Schema.define(version: 20150816091144) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "raw_ptt_articles", "ptt_tags"
+  add_foreign_key "raw_ptt_comments", "raw_ptt_articles"
 end
