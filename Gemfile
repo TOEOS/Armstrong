@@ -18,7 +18,7 @@ gem 'devise'
 gem 'omniauth-facebook'
 
 # http client
-gem 'rest_client'
+gem 'rest-client'
 gem 'faraday'
 
 # view
